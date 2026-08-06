@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regístrate en Cimbra</title>
+<style>
+:root{
+  --blue-900:#08243F; --blue-800:#0C3866; --blue-700:#0C447C; --blue-400:#378ADD; --blue-200:#B5D4F4;
+  --amber-600:#BA7517; --amber-400:#E0A64B;
+  --paper:#F1EFE8; --paper-dim:#E7E4D9;
+  --ink:#1D1C19; --ink-soft:#5F5E5A;
+  --line:rgba(29,28,25,0.12); --line-dark:rgba(241,239,232,0.16);
+  --radius:10px;
+  --disp:'Century Gothic','Futura','Trebuchet MS',sans-serif;
+  --body:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --mono:'SF Mono','Consolas','Menlo',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--body); background:var(--paper); color:var(--ink); line-height:1.5; -webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+.wrap{max-width:1100px;margin:0 auto;padding:0 28px;}
+a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible{outline:2px solid var(--blue-400); outline-offset:2px;}
+
+header{position:sticky; top:0; z-index:50; background:rgba(241,239,232,0.94); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);}
+nav{display:flex; align-items:center; justify-content:space-between; padding:16px 28px; max-width:1100px; margin:0 auto; gap:16px;}
+.brand{display:flex; align-items:center; gap:10px;}
+.brand-text{font-family:var(--disp); font-weight:700; font-size:18px; letter-spacing:0.08em; text-transform:uppercase;}
+.nav-links{display:flex; gap:26px; font-size:13.5px; color:var(--ink-soft);}
+.nav-links a:hover{color:var(--blue-700);}
+.nav-links a.active{color:var(--blue-700); font-weight:600;}
+.nav-right{display:flex; align-items:center; gap:12px;}
+.btn{display:inline-flex; align-items:center; gap:8px; font-size:13.5px; font-weight:600; padding:10px 18px; border-radius:7px; border:1px solid transparent; cursor:pointer; transition:transform .12s ease, background .15s ease;}
+.btn:hover{transform:translateY(-1px);}
+.btn-amber{background:var(--amber-600); color:#fff;}
+.btn-amber:hover{background:#a2680f;}
+.btn-blue{background:var(--blue-700); color:#fff;}
+.btn-blue:hover{background:var(--blue-800);}
+.btn-ghost{color:var(--blue-700); font-size:13.5px; font-weight:600;}
+.nav-mobile-hide{display:flex;}
+@media(max-width:860px){ .nav-mobile-hide{display:none;} }
+
+footer{background:var(--blue-900); color:var(--blue-200); padding:36px 0; text-align:center; font-size:12px;}
+
+.page-hero{background:linear-gradient(160deg,var(--blue-800) 0%, var(--blue-900) 75%); color:#fff; padding:56px 0 44px;}
+.page-eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:0.24em; text-transform:uppercase; color:var(--blue-200); margin-bottom:14px;}
+.page-hero h1{font-family:var(--disp); font-weight:700; font-size:clamp(26px,3.6vw,38px); margin-bottom:10px;}
+.page-hero p{color:var(--blue-200); font-size:15px; max-width:60ch;}
+
+section{padding:48px 0;}
+.card{background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:24px;}
+label{display:block; font-size:12.5px; font-weight:600; color:var(--ink); margin-bottom:6px;}
+input[type=text], input[type=email], input[type=number], input[type=date], select, textarea{
+  width:100%; font-family:var(--body); font-size:14px; padding:11px 13px; border-radius:7px; border:1px solid var(--line);
+  background:var(--paper); color:var(--ink); margin-bottom:16px;
+}
+textarea{resize:vertical; min-height:90px;}
+.field-row{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+@media(max-width:640px){ .field-row{grid-template-columns:1fr;} }
+
+</style>
+</head>
+<body>
+<header>
+  <nav>
+    <a href="index.html" class="brand">
+      <svg viewBox="0 0 64 64" width="24" height="24" fill="none"><path d="M14 54 L14 30 A18 18 0 0 1 50 30 L50 54" stroke="#0C447C" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="brand-text">Cimbra</span>
+    </a>
+    <div class="nav-links nav-mobile-hide">
+      <a href="publicar-solicitud.html" id="nl-publicar">Publicar solicitud</a>
+      <a href="solicitudes-abiertas.html" id="nl-solicitudes">Solicitudes abiertas</a>
+      <a href="index.html#comparador" id="nl-comparador">Comparador</a>
+      <a href="panel.html" id="nl-panel">Mi panel</a>
+      <a href="precios.html" id="nl-precios">Precios</a>
+    </div>
+    <div class="nav-right">
+      <a href="registro.html" class="btn-ghost" id="nl-login">Iniciar sesión</a>
+      <a href="registro.html" class="btn btn-amber" id="nl-registro">Registrarse</a>
+    </div>
+  </nav>
+</header>
+
+
+<section class="page-hero" style="padding:44px 0;">
+  <div class="wrap">
+    <div class="page-eyebrow">Únete a Cimbra</div>
+    <h1>Crea tu cuenta</h1>
+    <p>Regístrate como fábrica para recibir solicitudes, o como constructora para publicar la tuya.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap" style="max-width:640px;">
+    <div style="display:flex; gap:8px; margin-bottom:24px; background:var(--paper-dim); padding:5px; border-radius:9px;">
+      <button class="role-tab active" data-role="constructora" style="flex:1; padding:11px; border:none; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">Soy constructora / reformista</button>
+      <button class="role-tab" data-role="fabrica" style="flex:1; padding:11px; border:none; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; background:transparent;">Soy fábrica / distribuidor</button>
+      <button class="role-tab" data-role="transportista" style="flex:1; padding:11px; border:none; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; background:transparent;">Soy transportista</button>
+    </div>
+
+    <div style="display:flex; gap:20px; margin-bottom:20px; font-size:13.5px;">
+      <button class="mode-tab active" data-mode="registro" style="border:none; background:none; font-weight:600; color:var(--blue-700); cursor:pointer; padding-bottom:6px; border-bottom:2px solid var(--blue-700);">Crear cuenta</button>
+      <button class="mode-tab" data-mode="login" style="border:none; background:none; font-weight:600; color:var(--ink-soft); cursor:pointer; padding-bottom:6px; border-bottom:2px solid transparent;">Ya tengo cuenta</button>
+    </div>
+
+    <div class="card" id="form-registro-constructora">
+      <div class="field-row">
+        <div><label>Nombre de la empresa / autónomo</label><input type="text" placeholder="Reformas Martínez S.L."></div>
+        <div><label>CIF / NIF</label><input type="text" placeholder="B12345678"></div>
+      </div>
+      <div class="field-row">
+        <div><label>Provincia</label><select><option>Toledo</option><option>Madrid</option><option>Valencia</option><option>Sevilla</option></select></div>
+        <div><label>Volumen aproximado de obra al año</label><select><option>Menos de 5 obras</option><option>5 a 20 obras</option><option>Más de 20 obras</option></select></div>
+      </div>
+      <label>Email de contacto</label><input type="email" placeholder="tu@empresa.com">
+      <label>Contraseña</label><input type="text" placeholder="••••••••">
+      <button class="btn btn-amber" style="width:100%; justify-content:center; padding:13px;">Crear cuenta de constructora</button>
+    </div>
+
+    <div class="card" id="form-registro-fabrica" style="display:none;">
+      <div class="field-row">
+        <div><label>Nombre de la fábrica / distribuidor</label><input type="text" placeholder="Hormigones del Tajo S.A."></div>
+        <div><label>CIF</label><input type="text" placeholder="A87654321"></div>
+      </div>
+      <div class="field-row">
+        <div><label>Material principal</label><select><option>Cemento</option><option>Arena</option><option>Grava</option><option>Hormigón</option><option>Acero corrugado</option><option>Ladrillos</option><option>Bloques de cemento</option><option>Madera</option><option>Yeso</option><option>Vidrio</option><option>Cerámica</option><option>Pintura</option></select></div>
+        <div><label>Zona de cobertura</label><select><option>Provincial</option><option>Regional</option><option>Nacional</option></select></div>
+      </div>
+      <label>Certificaciones de calidad (opcional, se verifican después)</label><input type="text" placeholder="Ej. ISO 9001, marcado CE">
+      <label>Email de contacto</label><input type="email" placeholder="ventas@fabrica.com">
+      <label>Contraseña</label><input type="text" placeholder="••••••••">
+      <button class="btn btn-amber" style="width:100%; justify-content:center; padding:13px;">Crear cuenta de fábrica</button>
+      <p style="font-size:11.5px; color:var(--ink-soft); margin-top:12px;">El registro y el perfil de catálogo son siempre gratuitos para fábricas.</p>
+    </div>
+
+    <div class="card" id="form-registro-transportista" style="display:none;">
+      <div style="background:var(--blue-200); color:var(--blue-700); font-size:11.5px; font-weight:600; padding:8px 12px; border-radius:6px; margin-bottom:16px;">Próximamente — el registro de transportistas se activará en una fase posterior del lanzamiento.</div>
+      <div class="field-row">
+        <div><label>Nombre de la empresa de transporte</label><input type="text" placeholder="Transportes Ibérica S.L."></div>
+        <div><label>CIF</label><input type="text" placeholder="B11223344"></div>
+      </div>
+      <div class="field-row">
+        <div><label>Tipo de vehículo / capacidad</label><select><option>Camión rígido (hasta 12t)</option><option>Tráiler (hasta 25t)</option><option>Bañera / volquete</option><option>Grúa autocargante</option></select></div>
+        <div><label>Zona de cobertura</label><select><option>Provincial</option><option>Regional</option><option>Nacional</option></select></div>
+      </div>
+      <label>Seguro de mercancías (obligatorio, se verifica antes de activar el perfil)</label><input type="text" placeholder="Compañía y nº de póliza">
+      <label>Email de contacto</label><input type="email" placeholder="info@transportes.com">
+      <button class="btn" style="width:100%; justify-content:center; padding:13px; background:var(--ink-soft); color:#fff; cursor:not-allowed;" disabled>Registro disponible próximamente</button>
+      <p style="font-size:11.5px; color:var(--ink-soft); margin-top:12px;">El registro y el perfil serán siempre gratuitos para transportistas, igual que para fábricas.</p>
+    </div>
+
+    <div class="card" id="form-login" style="display:none;">
+      <label>Email</label><input type="email" placeholder="tu@empresa.com">
+      <label>Contraseña</label><input type="text" placeholder="••••••••">
+      <button class="btn btn-blue" style="width:100%; justify-content:center; padding:13px;">Iniciar sesión</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+      <div style="display:flex; gap:18px; justify-content:center; flex-wrap:wrap; font-size:11.5px; margin-bottom:14px;">
+        <a href="Cimbra_Aviso_Legal.pdf" target="_blank" style="color:var(--blue-200);">Aviso legal</a>
+        <a href="Cimbra_Terminos_y_Condiciones.pdf" target="_blank" style="color:var(--blue-200);">Términos y condiciones</a>
+        <a href="Cimbra_Condiciones_Intermediacion.pdf" target="_blank" style="color:var(--blue-200);">Condiciones de intermediación</a>
+        <a href="Cimbra_Politica_de_Privacidad.pdf" target="_blank" style="color:var(--blue-200);">Política de privacidad</a>
+        <a href="Cimbra_Politica_de_Cookies.pdf" target="_blank" style="color:var(--blue-200);">Cookies</a>
+      </div>
+      <div>© 2026 Cimbra. Materiales de obra, sin fricción.</div>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.role-tab').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.role-tab').forEach(b=>{b.classList.remove('active'); b.style.background='transparent';});
+    btn.classList.add('active'); btn.style.background='#fff';
+    document.getElementById('form-registro-constructora').style.display = btn.dataset.role==='constructora' ? 'block':'none';
+    document.getElementById('form-registro-fabrica').style.display = btn.dataset.role==='fabrica' ? 'block':'none';
+    document.getElementById('form-registro-transportista').style.display = btn.dataset.role==='transportista' ? 'block':'none';
+  });
+});
+document.querySelectorAll('.mode-tab').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.mode-tab').forEach(b=>{b.classList.remove('active'); b.style.color='var(--ink-soft)'; b.style.borderBottomColor='transparent';});
+    btn.classList.add('active'); btn.style.color='var(--blue-700)'; btn.style.borderBottomColor='var(--blue-700)';
+    const isLogin = btn.dataset.mode==='login';
+    document.getElementById('form-login').style.display = isLogin ? 'block':'none';
+    const activeRole = document.querySelector('.role-tab.active').dataset.role;
+    document.getElementById('form-registro-constructora').style.display = (!isLogin && activeRole==='constructora') ? 'block':'none';
+    document.getElementById('form-registro-fabrica').style.display = (!isLogin && activeRole==='fabrica') ? 'block':'none';
+    document.getElementById('form-registro-transportista').style.display = (!isLogin && activeRole==='transportista') ? 'block':'none';
+  });
+});
+document.getElementById('nl-login').style.display='none';
+document.getElementById('nl-registro').textContent='Registrarse';
+</script>
+</body>
+</html>

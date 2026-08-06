@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Publicar solicitud | Cimbra</title>
+<style>
+:root{
+  --blue-900:#08243F; --blue-800:#0C3866; --blue-700:#0C447C; --blue-400:#378ADD; --blue-200:#B5D4F4;
+  --amber-600:#BA7517; --amber-400:#E0A64B;
+  --paper:#F1EFE8; --paper-dim:#E7E4D9;
+  --ink:#1D1C19; --ink-soft:#5F5E5A;
+  --line:rgba(29,28,25,0.12); --line-dark:rgba(241,239,232,0.16);
+  --radius:10px;
+  --disp:'Century Gothic','Futura','Trebuchet MS',sans-serif;
+  --body:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --mono:'SF Mono','Consolas','Menlo',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--body); background:var(--paper); color:var(--ink); line-height:1.5; -webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+.wrap{max-width:1100px;margin:0 auto;padding:0 28px;}
+a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible{outline:2px solid var(--blue-400); outline-offset:2px;}
+
+header{position:sticky; top:0; z-index:50; background:rgba(241,239,232,0.94); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);}
+nav{display:flex; align-items:center; justify-content:space-between; padding:16px 28px; max-width:1100px; margin:0 auto; gap:16px;}
+.brand{display:flex; align-items:center; gap:10px;}
+.brand-text{font-family:var(--disp); font-weight:700; font-size:18px; letter-spacing:0.08em; text-transform:uppercase;}
+.nav-links{display:flex; gap:26px; font-size:13.5px; color:var(--ink-soft);}
+.nav-links a:hover{color:var(--blue-700);}
+.nav-links a.active{color:var(--blue-700); font-weight:600;}
+.nav-right{display:flex; align-items:center; gap:12px;}
+.btn{display:inline-flex; align-items:center; gap:8px; font-size:13.5px; font-weight:600; padding:10px 18px; border-radius:7px; border:1px solid transparent; cursor:pointer; transition:transform .12s ease, background .15s ease;}
+.btn:hover{transform:translateY(-1px);}
+.btn-amber{background:var(--amber-600); color:#fff;}
+.btn-amber:hover{background:#a2680f;}
+.btn-blue{background:var(--blue-700); color:#fff;}
+.btn-blue:hover{background:var(--blue-800);}
+.btn-ghost{color:var(--blue-700); font-size:13.5px; font-weight:600;}
+.nav-mobile-hide{display:flex;}
+@media(max-width:860px){ .nav-mobile-hide{display:none;} }
+
+footer{background:var(--blue-900); color:var(--blue-200); padding:36px 0; text-align:center; font-size:12px;}
+
+.page-hero{background:linear-gradient(160deg,var(--blue-800) 0%, var(--blue-900) 75%); color:#fff; padding:56px 0 44px;}
+.page-eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:0.24em; text-transform:uppercase; color:var(--blue-200); margin-bottom:14px;}
+.page-hero h1{font-family:var(--disp); font-weight:700; font-size:clamp(26px,3.6vw,38px); margin-bottom:10px;}
+.page-hero p{color:var(--blue-200); font-size:15px; max-width:60ch;}
+
+section{padding:48px 0;}
+.card{background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:24px;}
+label{display:block; font-size:12.5px; font-weight:600; color:var(--ink); margin-bottom:6px;}
+input[type=text], input[type=email], input[type=number], input[type=date], select, textarea{
+  width:100%; font-family:var(--body); font-size:14px; padding:11px 13px; border-radius:7px; border:1px solid var(--line);
+  background:var(--paper); color:var(--ink); margin-bottom:16px;
+}
+textarea{resize:vertical; min-height:90px;}
+.field-row{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+@media(max-width:640px){ .field-row{grid-template-columns:1fr;} }
+
+.progress{display:flex; gap:6px; margin-bottom:28px;}
+.progress span{flex:1; height:4px; border-radius:2px; background:var(--line);}
+.progress span.done{background:var(--blue-700);}
+.recap{background:var(--paper-dim); border-radius:var(--radius); padding:18px 20px; margin-top:20px; font-size:13px; color:var(--ink-soft);}
+.recap b{color:var(--ink);}
+.notify-count{display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:12px; color:var(--blue-700); background:var(--blue-200); padding:4px 10px; border-radius:5px; margin-top:10px;}
+</style>
+</head>
+<body>
+<header>
+  <nav>
+    <a href="index.html" class="brand">
+      <svg viewBox="0 0 64 64" width="24" height="24" fill="none"><path d="M14 54 L14 30 A18 18 0 0 1 50 30 L50 54" stroke="#0C447C" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="brand-text">Cimbra</span>
+    </a>
+    <div class="nav-links nav-mobile-hide">
+      <a href="publicar-solicitud.html" id="nl-publicar">Publicar solicitud</a>
+      <a href="solicitudes-abiertas.html" id="nl-solicitudes">Solicitudes abiertas</a>
+      <a href="index.html#comparador" id="nl-comparador">Comparador</a>
+      <a href="panel.html" id="nl-panel">Mi panel</a>
+      <a href="precios.html" id="nl-precios">Precios</a>
+    </div>
+    <div class="nav-right">
+      <a href="registro.html" class="btn-ghost" id="nl-login">Iniciar sesión</a>
+      <a href="registro.html" class="btn btn-amber" id="nl-registro">Registrarse</a>
+    </div>
+  </nav>
+</header>
+
+
+<section class="page-hero" style="padding:44px 0;">
+  <div class="wrap">
+    <div class="page-eyebrow">Licitación inversa</div>
+    <h1>Publica tu solicitud de materiales</h1>
+    <p>Describe lo que necesitas y las fábricas homologadas que encajen recibirán un aviso automático para ofertar.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap" style="max-width:680px;">
+    <div class="progress"><span class="done"></span><span class="done"></span><span></span></div>
+
+    <div class="card">
+      <h3 style="font-family:var(--disp); font-size:17px; margin-bottom:16px;">1. Qué necesitas</h3>
+      <div class="field-row">
+        <div><label>Material</label>
+          <select id="material"><option>Cemento</option><option>Arena</option><option>Grava</option><option>Hormigón</option><option>Acero corrugado</option><option>Ladrillos</option><option>Bloques de cemento</option><option>Madera</option><option>Yeso</option><option>Vidrio</option><option>Cerámica</option><option>Pintura</option></select>
+        </div>
+        <div><label>Cantidad</label>
+          <div style="display:flex; gap:8px;">
+            <input type="number" placeholder="40" style="margin-bottom:16px;">
+            <select style="width:110px;"><option>toneladas</option><option>m³</option><option>unidades</option><option>m²</option></select>
+          </div>
+        </div>
+      </div>
+      <label>Especificaciones adicionales (opcional)</label>
+      <textarea placeholder="Ej. hormigón HA-25, resistencia al fuego, acabado específico..."></textarea>
+
+      <h3 style="font-family:var(--disp); font-size:17px; margin:22px 0 16px;">2. Dónde y cuándo</h3>
+      <div class="field-row">
+        <div><label>Ubicación de la obra</label><input type="text" placeholder="Toledo, Castilla-La Mancha"></div>
+        <div><label>Fecha de entrega deseada</label><input type="date"></div>
+      </div>
+
+      <h3 style="font-family:var(--disp); font-size:17px; margin:22px 0 16px;">3. Contacto para las ofertas</h3>
+      <div class="field-row">
+        <div><label>Persona de contacto</label><input type="text" placeholder="Nombre y apellidos"></div>
+        <div><label>Teléfono</label><input type="text" placeholder="600 000 000"></div>
+      </div>
+
+      <button class="btn btn-amber" id="publish-btn" style="width:100%; justify-content:center; padding:14px;">Publicar solicitud</button>
+
+      <div class="notify-count" id="notify-count">≈ 6 fábricas homologadas serán notificadas</div>
+
+      <div class="recap">
+        Al publicar, tu solicitud queda visible únicamente para fábricas verificadas que operan en <b>Castilla-La Mancha</b> y trabajan con <b id="recap-material">Hormigón</b>. Recibirás las ofertas directamente en tu panel de constructora, normalmente en menos de 48h.
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+      <div style="display:flex; gap:18px; justify-content:center; flex-wrap:wrap; font-size:11.5px; margin-bottom:14px;">
+        <a href="Cimbra_Aviso_Legal.pdf" target="_blank" style="color:var(--blue-200);">Aviso legal</a>
+        <a href="Cimbra_Terminos_y_Condiciones.pdf" target="_blank" style="color:var(--blue-200);">Términos y condiciones</a>
+        <a href="Cimbra_Condiciones_Intermediacion.pdf" target="_blank" style="color:var(--blue-200);">Condiciones de intermediación</a>
+        <a href="Cimbra_Politica_de_Privacidad.pdf" target="_blank" style="color:var(--blue-200);">Política de privacidad</a>
+        <a href="Cimbra_Politica_de_Cookies.pdf" target="_blank" style="color:var(--blue-200);">Cookies</a>
+      </div>
+      <div>© 2026 Cimbra. Materiales de obra, sin fricción.</div>
+  </div>
+</footer>
+
+<script>
+const counts = {"Cemento":9,"Arena":7,"Grava":6,"Hormigón":6,"Acero corrugado":3,"Ladrillos":5,"Bloques de cemento":4,"Madera":4,"Yeso":3,"Vidrio":2,"Cerámica":4,"Pintura":5,"Otro":2};
+const materialSel = document.getElementById('material');
+function updateNotify(){
+  document.getElementById('notify-count').textContent = '≈ ' + counts[materialSel.value] + ' fábricas homologadas serán notificadas';
+  document.getElementById('recap-material').textContent = materialSel.value;
+}
+materialSel.addEventListener('change', updateNotify);
+updateNotify();
+document.getElementById('publish-btn').addEventListener('click', (e)=>{
+  e.preventDefault();
+  alert('Demo: aquí se publicaría la solicitud y se notificaría a las fábricas homologadas.');
+});
+document.getElementById('nl-publicar').classList.add('active');
+</script>
+</body>
+</html>
