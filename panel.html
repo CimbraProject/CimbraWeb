@@ -69,6 +69,10 @@ textarea{resize:vertical; min-height:90px;}
 .offer-meta{display:flex; gap:18px; font-size:13px; color:var(--ink-soft); flex-wrap:wrap;}
 .offer-meta b{color:var(--ink); font-family:var(--mono);}
 .best-tag{display:inline-block; font-size:10.5px; font-weight:700; color:var(--blue-700); background:var(--blue-200); padding:2px 8px; border-radius:10px; margin-bottom:6px;}
+.panel-empty{text-align:center; padding:36px 20px; border:1px dashed var(--line); border-radius:10px; color:var(--ink-soft); font-size:13.5px; background:#fff;}
+.logo-upload{display:flex; align-items:center; gap:16px; margin-bottom:20px;}
+.logo-preview{width:72px; height:72px; border-radius:10px; background:var(--paper-dim); border:1px dashed var(--line); display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;}
+.logo-preview img{width:100%; height:100%; object-fit:cover;}
 </style>
 </head>
 <body>
@@ -95,7 +99,7 @@ textarea{resize:vertical; min-height:90px;}
 
 <section class="page-hero" style="padding:36px 0;">
   <div class="wrap">
-    <div class="page-eyebrow">Constructora · Reformas Martínez S.L.</div>
+    <div class="page-eyebrow">Constructora · [Nombre de tu empresa]</div>
     <h1>Mi panel</h1>
   </div>
 </section>
@@ -106,91 +110,39 @@ textarea{resize:vertical; min-height:90px;}
       <button class="active" data-tab="solicitudes">Mis solicitudes</button>
       <button data-tab="ofertas">Ofertas recibidas</button>
       <button data-tab="cerrados">Acuerdos cerrados</button>
+      <button data-tab="perfil">Mi perfil</button>
     </div>
 
     <div id="tab-solicitudes">
-      <div class="req-card">
-        <div>
-          <strong>Hormigón HA-25 · 40 toneladas</strong>
-          <div style="font-size:12.5px; color:var(--ink-soft); margin-top:4px;">Toledo · publicada hace 2 días</div>
-        </div>
-        <span class="req-status status-abierta">3 ofertas recibidas</span>
-      </div>
-      <div class="req-card">
-        <div>
-          <strong>Acero corrugado · 12 toneladas</strong>
-          <div style="font-size:12.5px; color:var(--ink-soft); margin-top:4px;">Toledo · publicada hace 6 días</div>
-        </div>
-        <span class="req-status status-cerrada">Acuerdo cerrado</span>
-      </div>
-      <a href="publicar-solicitud.html" class="btn btn-amber" style="margin-top:8px; display:inline-flex;">+ Publicar nueva solicitud</a>
+      <div class="panel-empty">Todavía no has publicado ninguna solicitud.</div>
+      <a href="publicar-solicitud.html" class="btn btn-amber" style="margin-top:16px; display:inline-flex;">+ Publicar nueva solicitud</a>
     </div>
 
     <div id="tab-ofertas" style="display:none;">
-      <p style="font-size:13.5px; color:var(--ink-soft); margin-bottom:16px;">Ofertas para: <strong>Hormigón HA-25 · 40 toneladas · Toledo</strong></p>
-
-      <div class="offer-card offer-best">
-        <div>
-          <span class="best-tag">Mejor precio</span>
-          <div><strong>Hormigones del Tajo</strong></div>
-        </div>
-        <div class="offer-meta">
-          <span>Precio: <b>76 €/t</b></span>
-          <span>Entrega: <b>2 días</b></span>
-          <span>Valoración: <b>4.6 ★</b></span>
-        </div>
-        <button class="btn btn-blue" onclick="document.getElementById('transport-step').style.display='block'; this.closest('.offer-card').style.opacity='0.6'; window.scrollTo(0,document.getElementById('transport-step').offsetTop-100);">Elegir esta oferta</button>
-      </div>
-
-      <div class="offer-card">
-        <div><strong>Distribuidora Castilla</strong></div>
-        <div class="offer-meta">
-          <span>Precio: <b>82 €/t</b></span>
-          <span>Entrega: <b>1 día</b></span>
-          <span>Valoración: <b>4.0 ★</b></span>
-        </div>
-        <button class="btn" style="border:1px solid var(--line); color:var(--ink);" onclick="document.getElementById('transport-step').style.display='block'; window.scrollTo(0,document.getElementById('transport-step').offsetTop-100);">Elegir esta oferta</button>
-      </div>
-
-      <div class="offer-card">
-        <div><strong>Hormigones Turia</strong></div>
-        <div class="offer-meta">
-          <span>Precio: <b>79 €/t</b></span>
-          <span>Entrega: <b>3 días</b></span>
-          <span>Valoración: <b>4.1 ★</b></span>
-        </div>
-        <button class="btn" style="border:1px solid var(--line); color:var(--ink);" onclick="document.getElementById('transport-step').style.display='block'; window.scrollTo(0,document.getElementById('transport-step').offsetTop-100);">Elegir esta oferta</button>
-      </div>
-
-      <div id="transport-step" style="display:none; margin-top:20px; background:#fff; border:1px solid var(--line); border-radius:10px; padding:20px 22px;">
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
-          <strong style="font-size:14px;">¿Necesitas transporte para este pedido?</strong>
-          <span style="font-size:10.5px; font-weight:700; color:#fff; background:var(--amber-600); padding:2px 8px; border-radius:10px;">Próximamente</span>
-        </div>
-        <p style="font-size:12.5px; color:var(--ink-soft); margin-bottom:16px;">Es una operación aparte del acuerdo de materiales, con su propia comisión. Selecciona un transportista verificado según la cantidad y fecha de tu pedido.</p>
-
-        <div class="offer-card">
-          <div><strong>Transportes Ibérica</strong><div style="font-size:11.5px; color:var(--ink-soft);">Tráiler hasta 25t · seguro de mercancías vigente</div></div>
-          <div class="offer-meta"><span>Precio: <b>~140 €</b></span><span>Disponible: <b>mañana</b></span></div>
-          <button class="btn" style="border:1px solid var(--line); color:var(--ink-soft); cursor:not-allowed;" disabled>Próximamente</button>
-        </div>
-        <div class="offer-card">
-          <div><strong>Transportes del Duero</strong><div style="font-size:11.5px; color:var(--ink-soft);">Camión rígido hasta 12t · seguro de mercancías vigente</div></div>
-          <div class="offer-meta"><span>Precio: <b>~95 €</b></span><span>Disponible: <b>hoy</b></span></div>
-          <button class="btn" style="border:1px solid var(--line); color:var(--ink-soft); cursor:not-allowed;" disabled>Próximamente</button>
-        </div>
-        <button class="btn" style="border:1px solid var(--line); color:var(--ink); margin-top:6px;" onclick="document.getElementById('transport-step').style.display='none';">No necesito transporte</button>
-      </div>
+      <div class="panel-empty">Todavía no tienes ofertas recibidas. Publica una solicitud para empezar a recibir ofertas de fábricas homologadas.</div>
     </div>
 
-
     <div id="tab-cerrados" style="display:none;">
-      <div class="req-card">
-        <div>
-          <strong>Acero corrugado · 12 toneladas · Aceros Norte</strong>
-          <div style="font-size:12.5px; color:var(--ink-soft); margin-top:4px;">Cerrado el 12/07/2026 · 920 €/t</div>
+      <div class="panel-empty">Todavía no tienes acuerdos cerrados. Aparecerán aquí en cuanto confirmes uno.</div>
+    </div>
+
+    <div id="tab-perfil" style="display:none;">
+      <div class="card">
+        <h3 style="font-family:var(--disp); font-size:17px; margin-bottom:16px;">Datos de la empresa</h3>
+        <div class="logo-upload">
+          <div class="logo-preview" id="logo-preview"><span style="font-size:10.5px; color:var(--ink-soft); text-align:center; padding:0 6px;">Sin logo</span></div>
+          <div style="flex:1;">
+            <label for="perfil-logo">Logotipo de la empresa</label>
+            <input type="file" id="perfil-logo" accept="image/*" style="margin-bottom:0;">
+          </div>
         </div>
-        <span class="req-status status-cerrada">✓ Comisión aplicada: 3%</span>
+        <label for="perfil-nombre">Nombre de la empresa</label>
+        <input type="text" id="perfil-nombre" placeholder="Nombre de tu empresa">
+        <label for="perfil-descripcion">Descripción breve</label>
+        <textarea id="perfil-descripcion" placeholder="A qué se dedica tu empresa, años de experiencia, tipo de obras..."></textarea>
+        <label for="perfil-info">Información adicional</label>
+        <textarea id="perfil-info" placeholder="Certificaciones, zona de cobertura, condiciones de entrega o cualquier otro dato relevante para quien vea tu perfil..."></textarea>
+        <button class="btn btn-amber" id="perfil-guardar" style="margin-top:4px;">Guardar cambios</button>
       </div>
     </div>
   </div>
@@ -214,12 +166,28 @@ document.querySelectorAll('.panel-tabs button').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     document.querySelectorAll('.panel-tabs button').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
-    ['solicitudes','ofertas','cerrados'].forEach(t=>{
+    ['solicitudes','ofertas','cerrados','perfil'].forEach(t=>{
       document.getElementById('tab-'+t).style.display = (t===btn.dataset.tab) ? 'block':'none';
     });
   });
 });
 document.getElementById('nl-panel').classList.add('active');
+
+document.getElementById('perfil-logo').addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    document.getElementById('logo-preview').innerHTML = `<img src="${reader.result}" alt="Logotipo de la empresa">`;
+  };
+  reader.readAsDataURL(file);
+});
+document.getElementById('perfil-nombre').addEventListener('input', (e)=>{
+  document.querySelector('.page-eyebrow').textContent = 'Constructora · ' + (e.target.value.trim() || '[Nombre de tu empresa]');
+});
+document.getElementById('perfil-guardar').addEventListener('click', ()=>{
+  alert('Demo: esto guardaría los datos de tu perfil de empresa.');
+});
 </script>
 </body>
 </html>
