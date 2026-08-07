@@ -67,14 +67,11 @@ textarea{resize:vertical; min-height:90px;}
       <span class="brand-text">Cimbra</span>
     </a>
     <div class="nav-links nav-mobile-hide">
-      <a href="publicar-solicitud.html" id="nl-publicar">Publicar solicitud</a>
-      <a href="solicitudes-abiertas.html" id="nl-solicitudes">Solicitudes abiertas</a>
-      <a href="panel.html" id="nl-panel">Mi panel</a>
-      <a href="precios.html" id="nl-precios">Precios</a>
-    </div>
-    <div class="nav-right">
-      <a href="registro.html" class="btn-ghost" id="nl-login">Iniciar sesión</a>
-      <a href="registro.html" class="btn btn-amber" id="nl-registro">Registrarse</a>
+      <a href="index.html#como-funciona">Cómo funciona</a>
+      <a href="index.html#fabricas">Para fábricas</a>
+      <a href="index.html#constructoras">Para constructoras</a>
+      <a href="index.html#comparador">Comparador</a>
+      <a href="precios.html">Precios</a>
     </div>
   </nav>
 </header>
@@ -90,15 +87,13 @@ textarea{resize:vertical; min-height:90px;}
 
 <section>
   <div class="wrap" style="max-width:640px;">
+    <div id="signup-section">
+    <p style="text-align:center; font-size:13.5px; margin-bottom:20px;">¿Ya tienes cuenta? <a href="#" id="show-login" style="color:var(--blue-700); font-weight:600;">Inicia sesión</a></p>
+
     <div style="display:flex; gap:8px; margin-bottom:24px; background:var(--paper-dim); padding:5px; border-radius:9px;">
       <button class="role-tab active" data-role="constructora" style="flex:1; padding:11px; border:none; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">Soy constructora / reformista</button>
       <button class="role-tab" data-role="fabrica" style="flex:1; padding:11px; border:none; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; background:transparent;">Soy fábrica / distribuidor</button>
       <button class="role-tab" data-role="transportista" style="flex:1; padding:11px; border:none; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; background:transparent;">Soy transportista</button>
-    </div>
-
-    <div style="display:flex; gap:20px; margin-bottom:20px; font-size:13.5px;">
-      <button class="mode-tab active" data-mode="registro" style="border:none; background:none; font-weight:600; color:var(--blue-700); cursor:pointer; padding-bottom:6px; border-bottom:2px solid var(--blue-700);">Crear cuenta</button>
-      <button class="mode-tab" data-mode="login" style="border:none; background:none; font-weight:600; color:var(--ink-soft); cursor:pointer; padding-bottom:6px; border-bottom:2px solid transparent;">Ya tengo cuenta</button>
     </div>
 
     <div class="card" id="form-registro-constructora">
@@ -112,7 +107,7 @@ textarea{resize:vertical; min-height:90px;}
       </div>
       <label>Email de contacto</label><input type="email" placeholder="tu@empresa.com">
       <label>Contraseña</label><input type="password" placeholder="••••••••">
-      <button class="btn btn-amber" style="width:100%; justify-content:center; padding:13px;">Crear cuenta de constructora</button>
+      <button class="btn btn-amber" id="signup-constructora-btn" style="width:100%; justify-content:center; padding:13px;">Crear cuenta de constructora</button>
     </div>
 
     <div class="card" id="form-registro-fabrica" style="display:none;">
@@ -127,7 +122,7 @@ textarea{resize:vertical; min-height:90px;}
       <label>Certificaciones de calidad (opcional, se verifican después)</label><input type="text" placeholder="Ej. ISO 9001, marcado CE">
       <label>Email de contacto</label><input type="email" placeholder="ventas@fabrica.com">
       <label>Contraseña</label><input type="password" placeholder="••••••••">
-      <button class="btn btn-amber" style="width:100%; justify-content:center; padding:13px;">Crear cuenta de fábrica</button>
+      <button class="btn btn-amber" id="signup-fabrica-btn" style="width:100%; justify-content:center; padding:13px;">Crear cuenta de fábrica</button>
       <p style="font-size:11.5px; color:var(--ink-soft); margin-top:12px;">El registro y el perfil de catálogo son siempre gratuitos para fábricas.</p>
     </div>
 
@@ -146,11 +141,15 @@ textarea{resize:vertical; min-height:90px;}
       <button class="btn" style="width:100%; justify-content:center; padding:13px; background:var(--ink-soft); color:#fff; cursor:not-allowed;" disabled>Registro disponible próximamente</button>
       <p style="font-size:11.5px; color:var(--ink-soft); margin-top:12px;">El registro y el perfil serán siempre gratuitos para transportistas, igual que para fábricas.</p>
     </div>
+    </div>
 
-    <div class="card" id="form-login" style="display:none;">
-      <label>Email</label><input type="email" placeholder="tu@empresa.com">
-      <label>Contraseña</label><input type="password" placeholder="••••••••">
-      <button class="btn btn-blue" style="width:100%; justify-content:center; padding:13px;">Iniciar sesión</button>
+    <div id="login-section" style="display:none;">
+      <p style="text-align:center; font-size:13.5px; margin-bottom:20px;">¿Todavía no tienes cuenta? <a href="#" id="show-signup" style="color:var(--blue-700); font-weight:600;">Regístrate</a></p>
+      <div class="card" id="form-login">
+        <label>Email</label><input type="email" id="login-email" placeholder="tu@empresa.com">
+        <label>Contraseña</label><input type="password" id="login-password" placeholder="••••••••">
+        <button class="btn btn-blue" id="login-btn" style="width:100%; justify-content:center; padding:13px;">Iniciar sesión</button>
+      </div>
     </div>
   </div>
 </section>
@@ -178,20 +177,29 @@ document.querySelectorAll('.role-tab').forEach(btn=>{
     document.getElementById('form-registro-transportista').style.display = btn.dataset.role==='transportista' ? 'block':'none';
   });
 });
-document.querySelectorAll('.mode-tab').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    document.querySelectorAll('.mode-tab').forEach(b=>{b.classList.remove('active'); b.style.color='var(--ink-soft)'; b.style.borderBottomColor='transparent';});
-    btn.classList.add('active'); btn.style.color='var(--blue-700)'; btn.style.borderBottomColor='var(--blue-700)';
-    const isLogin = btn.dataset.mode==='login';
-    document.getElementById('form-login').style.display = isLogin ? 'block':'none';
-    const activeRole = document.querySelector('.role-tab.active').dataset.role;
-    document.getElementById('form-registro-constructora').style.display = (!isLogin && activeRole==='constructora') ? 'block':'none';
-    document.getElementById('form-registro-fabrica').style.display = (!isLogin && activeRole==='fabrica') ? 'block':'none';
-    document.getElementById('form-registro-transportista').style.display = (!isLogin && activeRole==='transportista') ? 'block':'none';
-  });
+document.getElementById('show-login').addEventListener('click', (e)=>{
+  e.preventDefault();
+  document.getElementById('signup-section').style.display = 'none';
+  document.getElementById('login-section').style.display = 'block';
 });
-document.getElementById('nl-login').style.display='none';
-document.getElementById('nl-registro').textContent='Registrarse';
+document.getElementById('show-signup').addEventListener('click', (e)=>{
+  e.preventDefault();
+  document.getElementById('login-section').style.display = 'none';
+  document.getElementById('signup-section').style.display = 'block';
+});
+
+document.getElementById('signup-constructora-btn').addEventListener('click', (e)=>{
+  e.preventDefault();
+  window.location.href = 'panel.html';
+});
+document.getElementById('signup-fabrica-btn').addEventListener('click', (e)=>{
+  e.preventDefault();
+  window.location.href = 'panel.html';
+});
+document.getElementById('login-btn').addEventListener('click', (e)=>{
+  e.preventDefault();
+  window.location.href = 'panel.html';
+});
 </script>
 </body>
 </html>
