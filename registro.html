@@ -49,7 +49,7 @@ footer{background:var(--blue-900); color:var(--blue-200); padding:36px 0; text-a
 section{padding:48px 0;}
 .card{background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:24px;}
 label{display:block; font-size:12.5px; font-weight:600; color:var(--ink); margin-bottom:6px;}
-input[type=text], input[type=email], input[type=number], input[type=date], select, textarea{
+input[type=text], input[type=email], input[type=password], input[type=number], input[type=date], select, textarea{
   width:100%; font-family:var(--body); font-size:14px; padding:11px 13px; border-radius:7px; border:1px solid var(--line);
   background:var(--paper); color:var(--ink); margin-bottom:16px;
 }
@@ -69,7 +69,6 @@ textarea{resize:vertical; min-height:90px;}
     <div class="nav-links nav-mobile-hide">
       <a href="publicar-solicitud.html" id="nl-publicar">Publicar solicitud</a>
       <a href="solicitudes-abiertas.html" id="nl-solicitudes">Solicitudes abiertas</a>
-      <a href="index.html#comparador" id="nl-comparador">Comparador</a>
       <a href="panel.html" id="nl-panel">Mi panel</a>
       <a href="precios.html" id="nl-precios">Precios</a>
     </div>
@@ -104,7 +103,7 @@ textarea{resize:vertical; min-height:90px;}
 
     <div class="card" id="form-registro-constructora">
       <div class="field-row">
-        <div><label>Nombre de la empresa / autónomo</label><input type="text" placeholder="Reformas Martínez S.L."></div>
+        <div><label>Nombre de la empresa / autónomo</label><input type="text" placeholder="Nombre de tu empresa"></div>
         <div><label>CIF / NIF</label><input type="text" placeholder="B12345678"></div>
       </div>
       <div class="field-row">
@@ -112,13 +111,13 @@ textarea{resize:vertical; min-height:90px;}
         <div><label>Volumen aproximado de obra al año</label><select><option>Menos de 5 obras</option><option>5 a 20 obras</option><option>Más de 20 obras</option></select></div>
       </div>
       <label>Email de contacto</label><input type="email" placeholder="tu@empresa.com">
-      <label>Contraseña</label><input type="text" placeholder="••••••••">
+      <label>Contraseña</label><input type="password" placeholder="••••••••">
       <button class="btn btn-amber" style="width:100%; justify-content:center; padding:13px;">Crear cuenta de constructora</button>
     </div>
 
     <div class="card" id="form-registro-fabrica" style="display:none;">
       <div class="field-row">
-        <div><label>Nombre de la fábrica / distribuidor</label><input type="text" placeholder="Hormigones del Tajo S.A."></div>
+        <div><label>Nombre de la fábrica / distribuidor</label><input type="text" placeholder="Nombre de tu fábrica"></div>
         <div><label>CIF</label><input type="text" placeholder="A87654321"></div>
       </div>
       <div class="field-row">
@@ -127,7 +126,7 @@ textarea{resize:vertical; min-height:90px;}
       </div>
       <label>Certificaciones de calidad (opcional, se verifican después)</label><input type="text" placeholder="Ej. ISO 9001, marcado CE">
       <label>Email de contacto</label><input type="email" placeholder="ventas@fabrica.com">
-      <label>Contraseña</label><input type="text" placeholder="••••••••">
+      <label>Contraseña</label><input type="password" placeholder="••••••••">
       <button class="btn btn-amber" style="width:100%; justify-content:center; padding:13px;">Crear cuenta de fábrica</button>
       <p style="font-size:11.5px; color:var(--ink-soft); margin-top:12px;">El registro y el perfil de catálogo son siempre gratuitos para fábricas.</p>
     </div>
@@ -135,7 +134,7 @@ textarea{resize:vertical; min-height:90px;}
     <div class="card" id="form-registro-transportista" style="display:none;">
       <div style="background:var(--blue-200); color:var(--blue-700); font-size:11.5px; font-weight:600; padding:8px 12px; border-radius:6px; margin-bottom:16px;">Próximamente — el registro de transportistas se activará en una fase posterior del lanzamiento.</div>
       <div class="field-row">
-        <div><label>Nombre de la empresa de transporte</label><input type="text" placeholder="Transportes Ibérica S.L."></div>
+        <div><label>Nombre de la empresa de transporte</label><input type="text" placeholder="Nombre de tu empresa de transporte"></div>
         <div><label>CIF</label><input type="text" placeholder="B11223344"></div>
       </div>
       <div class="field-row">
@@ -150,7 +149,7 @@ textarea{resize:vertical; min-height:90px;}
 
     <div class="card" id="form-login" style="display:none;">
       <label>Email</label><input type="email" placeholder="tu@empresa.com">
-      <label>Contraseña</label><input type="text" placeholder="••••••••">
+      <label>Contraseña</label><input type="password" placeholder="••••••••">
       <button class="btn btn-blue" style="width:100%; justify-content:center; padding:13px;">Iniciar sesión</button>
     </div>
   </div>
