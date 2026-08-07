@@ -70,6 +70,8 @@ textarea{resize:vertical; min-height:90px;}
 .offer-form{display:none; background:var(--paper-dim); border-radius:8px; padding:16px 18px; margin-top:14px;}
 .offer-form .field-row{margin-bottom:0;}
 .offer-form input{margin-bottom:12px;}
+.sol-empty{text-align:center; padding:40px 20px; border:1px dashed var(--line); border-radius:10px; color:var(--ink-soft); font-size:14px;}
+.sol-empty a{color:var(--blue-700); font-weight:600; text-decoration:underline;}
 </style>
 </head>
 <body>
@@ -108,8 +110,25 @@ textarea{resize:vertical; min-height:90px;}
       <select id="f-material">
         <option value="">Todos los materiales</option><option>Cemento</option><option>Arena</option><option>Grava</option><option>Hormigón</option><option>Acero corrugado</option><option>Ladrillos</option><option>Bloques de cemento</option><option>Madera</option><option>Yeso</option><option>Vidrio</option><option>Cerámica</option><option>Pintura</option></select>
       <select id="f-ciudad">
+        <option value="internacional">Internacional</option>
         <option value="">Toda España</option>
-        <option>Madrid</option><option>Valencia</option><option>Sevilla</option><option>Toledo</option>
+        <option>Andalucía</option>
+        <option>Aragón</option>
+        <option>Principado de Asturias</option>
+        <option>Illes Balears</option>
+        <option>Canarias</option>
+        <option>Cantabria</option>
+        <option>Castilla-La Mancha</option>
+        <option>Castilla y León</option>
+        <option>Cataluña</option>
+        <option>Comunidad Valenciana</option>
+        <option>Extremadura</option>
+        <option>Galicia</option>
+        <option>Comunidad de Madrid</option>
+        <option>Región de Murcia</option>
+        <option>Comunidad Foral de Navarra</option>
+        <option>País Vasco</option>
+        <option>La Rioja</option>
       </select>
       <select id="f-estado">
         <option value="">Cualquier estado</option>
@@ -137,13 +156,7 @@ textarea{resize:vertical; min-height:90px;}
 </footer>
 
 <script>
-const solicitudes = [
-  {id:1, material:"Hormigón", city:"Toledo", qty:"40 t", plazo:"12/08/2026", ofertas:3, estado:"Recién publicada", empresa:"Reformas Martínez S.L."},
-  {id:2, material:"Acero corrugado", city:"Madrid", qty:"18 t", plazo:"05/08/2026", ofertas:1, estado:"Cierra pronto", empresa:"Construcciones Vega"},
-  {id:3, material:"Ladrillo", city:"Valencia", qty:"12.000 ud", plazo:"20/08/2026", ofertas:0, estado:"Recién publicada", empresa:"Obras Turia S.L."},
-  {id:4, material:"Aislamiento", city:"Toledo", qty:"320 m²", plazo:"15/08/2026", ofertas:2, estado:"Recién publicada", empresa:"Rehabilita Castilla"},
-  {id:5, material:"Hormigón", city:"Sevilla", qty:"65 t", plazo:"02/08/2026", ofertas:4, estado:"Cierra pronto", empresa:"Andalucía Construye"}
-];
+const solicitudes = [];
 
 function render(){
   const mat = document.getElementById('f-material').value;
@@ -153,6 +166,10 @@ function render(){
   document.getElementById('sol-count').textContent = filtered.length + ' solicitudes abiertas';
   const el = document.getElementById('sol-list');
   el.innerHTML = '';
+  if(filtered.length === 0){
+    el.innerHTML = '<div class="sol-empty">Todavía no hay solicitudes abiertas publicadas. <a href="publicar-solicitud.html">Publica la primera</a> si eres constructora, o <a href="registro.html">regístrate como fábrica</a> para recibir un aviso en cuanto haya solicitudes en tu categoría.</div>';
+    return;
+  }
   filtered.forEach(s=>{
     const card = document.createElement('div');
     card.className = 'sol-card';
