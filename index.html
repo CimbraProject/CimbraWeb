@@ -114,6 +114,8 @@
   .comp-filters select{font-family:var(--body); font-size:14px; padding:10px 14px; border-radius:7px; border:1px solid var(--line); background:var(--paper);}
   .comp-count{font-size:13px; color:var(--ink-soft); margin-left:auto;}
   .comp-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:16px;}
+  .comp-empty{grid-column:1/-1; text-align:center; padding:40px 20px; border:1px dashed var(--line); border-radius:12px; color:var(--ink-soft); font-size:14px;}
+  .comp-empty a{color:var(--blue-700); font-weight:600; text-decoration:underline;}
   .comp-card{background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:20px 20px 18px;}
   .comp-card-top{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;}
   .comp-card h3{font-family:var(--disp); font-size:16.5px; margin-bottom:3px;}
@@ -308,10 +310,15 @@
   <div class="wrap">
     <h2 data-i18n="final_h2">Compra. Elige. Construye.</h2>
     <p data-i18n="final_p">Déjanos tu email y te avisamos en cuanto Cimbra esté disponible en tu zona.</p>
-    <div class="form-row">
-      <input type="email" id="final-email" aria-label="Email">
-      <button class="btn" data-i18n="final_btn">Quiero acceso anticipado</button>
-    </div>
+    <form id="early-access-form" name="early-access" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="early-access">
+      <p style="position:absolute; left:-9999px;"><label>No rellenar: <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+      <div class="form-row">
+        <input type="email" id="final-email" name="email" required aria-label="Email">
+        <button class="btn" type="submit" data-i18n="final_btn">Quiero acceso anticipado</button>
+      </div>
+    </form>
+    <p id="final-feedback" role="status" style="margin-top:14px; font-size:13.5px; display:none;"></p>
   </div>
 </section>
 
@@ -364,12 +371,15 @@ const translations = {
     trust_eyebrow:"Confianza, no solo contacto", trust_h2:"Cada fábrica pasa por un proceso de verificación", trust_p:"Solvencia, certificaciones de calidad y capacidad real de producción, antes de que aparezca en tu lista de ofertas.",
     badge1:"Proveedor verificado", badge2:"Certificaciones al día", badge3:"Casos de éxito reales",
     comp_eyebrow:"Explora antes de contactar", comp_h2:"Comparador de proveedores", comp_p:"Rango de precio orientativo, plazo medio de entrega y valoración de fábricas verificadas, filtrado por material y ciudad.",
-    comp_all_materials:"Todos los materiales", comp_all_places:"Toda España",
+    comp_all_materials:"Todos los materiales", comp_international:"Internacional", comp_all_places:"Toda España",
     comp_rating:"Valoración", comp_delivery:"Plazo medio de entrega", comp_certified:"Proveedor verificado", comp_contact_btn:"Contactar con esta fábrica", comp_gate:"Regístrate gratis para desbloquear el contacto directo",
     comp_count_suffix:"proveedores encontrados",
+    comp_empty:"Todavía no hay fábricas verificadas publicadas en esta categoría. {link} para aparecer aquí en cuanto abramos tu zona.",
+    comp_empty_link:"Regístrate gratis como fábrica",
     comp_seo_p:"El rango de precio (€ a €€€) no lo declara la fábrica: se calcula de forma automática a partir de los acuerdos reales cerrados en cada categoría de material, comparando cada proveedor contra la media de su categoría y zona. Las valoraciones combinan reseñas públicas verificadas con la puntuación directa de constructoras que ya han cerrado un acuerdo a través de Cimbra.",
     comp_price_pattern:"Precio {material} {city}",
     final_h2:"Compra. Elige. Construye.", final_p:"Déjanos tu email y te avisamos en cuanto Cimbra esté disponible en tu zona.", final_placeholder:"tu@empresa.com", final_btn:"Quiero acceso anticipado",
+    final_thanks:"¡Gracias! Te avisaremos en cuanto Cimbra esté disponible en tu zona.", final_error:"Ha habido un problema al enviar tu email. Escríbenos a hola@cimbrasolutions.es.",
     foot_bottom:"© 2026 Cimbra. Materiales de obra, sin fricción."
   },
   en:{ nav_como:"How it works", nav_fabricas:"For factories", nav_constructoras:"For builders", nav_comparador:"Compare", nav_cta:"Request access",
@@ -395,12 +405,15 @@ const translations = {
     trust_eyebrow:"Trust, not just contact", trust_h2:"Every factory goes through a verification process", trust_p:"Solvency, up-to-date quality certifications and real production capacity, before it appears in your list of offers.",
     badge1:"Verified supplier", badge2:"Certifications up to date", badge3:"Real success stories",
     comp_eyebrow:"Explore before you reach out", comp_h2:"Supplier comparator", comp_p:"Indicative price range, average delivery time and rating of verified factories, filtered by material and city.",
-    comp_all_materials:"All materials", comp_all_places:"All of Spain",
+    comp_all_materials:"All materials", comp_international:"International", comp_all_places:"All of Spain",
     comp_rating:"Rating", comp_delivery:"Average delivery time", comp_certified:"Verified supplier", comp_contact_btn:"Contact this factory", comp_gate:"Sign up for free to unlock direct contact",
     comp_count_suffix:"suppliers found",
+    comp_empty:"There are no verified factories listed in this category yet. {link} to appear here as soon as we open your area.",
+    comp_empty_link:"Sign up for free as a factory",
     comp_seo_p:"The price range (€ to €€€) isn't self-declared by the factory: it's calculated automatically from real deals closed in each material category, comparing every supplier against the average for its category and region. Ratings combine verified public reviews with direct scores from builders who have already closed a deal through Cimbra.",
     comp_price_pattern:"{material} price {city}",
     final_h2:"Buy. Choose. Build.", final_p:"Leave us your email and we'll let you know as soon as Cimbra is available in your area.", final_placeholder:"you@company.com", final_btn:"I want early access",
+    final_thanks:"Thanks! We'll let you know as soon as Cimbra is available in your area.", final_error:"There was a problem sending your email. Write to us at hola@cimbrasolutions.es.",
     foot_bottom:"© 2026 Cimbra. Construction materials, without friction."
   },
   pt:{ nav_como:"Como funciona", nav_fabricas:"Para fábricas", nav_constructoras:"Para construtoras", nav_comparador:"Comparador", nav_cta:"Solicitar acesso",
@@ -426,12 +439,15 @@ const translations = {
     trust_eyebrow:"Confiança, não só contacto", trust_h2:"Cada fábrica passa por um processo de verificação", trust_p:"Solvência, certificações de qualidade em dia e capacidade real de produção, antes de aparecer na tua lista de propostas.",
     badge1:"Fornecedor verificado", badge2:"Certificações em dia", badge3:"Casos de sucesso reais",
     comp_eyebrow:"Explora antes de contactar", comp_h2:"Comparador de fornecedores", comp_p:"Faixa de preço indicativa, prazo médio de entrega e avaliação de fábricas verificadas, filtrado por material e cidade.",
-    comp_all_materials:"Todos os materiais", comp_all_places:"Toda a Espanha",
+    comp_all_materials:"Todos os materiais", comp_international:"Internacional", comp_all_places:"Toda a Espanha",
     comp_rating:"Avaliação", comp_delivery:"Prazo médio de entrega", comp_certified:"Fornecedor verificado", comp_contact_btn:"Contactar esta fábrica", comp_gate:"Regista-te gratuitamente para desbloquear o contacto direto",
     comp_count_suffix:"fornecedores encontrados",
+    comp_empty:"Ainda não há fábricas verificadas publicadas nesta categoria. {link} para apareceres aqui assim que abrirmos a tua zona.",
+    comp_empty_link:"Regista-te gratuitamente como fábrica",
     comp_seo_p:"A faixa de preço (€ a €€€) não é autodeclarada pela fábrica: é calculada automaticamente a partir dos acordos reais fechados em cada categoria de material, comparando cada fornecedor com a média da sua categoria e zona. As avaliações combinam reviews públicas verificadas com a pontuação direta de construtoras que já fecharam um acordo através da Cimbra.",
     comp_price_pattern:"Preço {material} {city}",
     final_h2:"Compra. Escolhe. Constrói.", final_p:"Deixa-nos o teu email e avisamos-te assim que a Cimbra estiver disponível na tua zona.", final_placeholder:"tu@empresa.com", final_btn:"Quero acesso antecipado",
+    final_thanks:"Obrigado! Avisamos-te assim que a Cimbra estiver disponível na tua zona.", final_error:"Houve um problema ao enviar o teu email. Escreve-nos para hola@cimbrasolutions.es.",
     foot_bottom:"© 2026 Cimbra. Materiais de obra, sem fricção."
   },
   fr:{ nav_como:"Comment ça marche", nav_fabricas:"Pour les usines", nav_constructoras:"Pour les constructeurs", nav_comparador:"Comparateur", nav_cta:"Demander l'accès",
@@ -457,12 +473,15 @@ const translations = {
     trust_eyebrow:"Confiance, pas seulement contact", trust_h2:"Chaque usine passe par un processus de vérification", trust_p:"Solvabilité, certifications qualité à jour et capacité de production réelle, avant d'apparaître dans votre liste d'offres.",
     badge1:"Fournisseur vérifié", badge2:"Certifications à jour", badge3:"Réussites réelles",
     comp_eyebrow:"Explorez avant de contacter", comp_h2:"Comparateur de fournisseurs", comp_p:"Fourchette de prix indicative, délai moyen de livraison et note des usines vérifiées, filtrés par matériau et ville.",
-    comp_all_materials:"Tous les matériaux", comp_all_places:"Toute l'Espagne",
+    comp_all_materials:"Tous les matériaux", comp_international:"International", comp_all_places:"Toute l'Espagne",
     comp_rating:"Note", comp_delivery:"Délai moyen de livraison", comp_certified:"Fournisseur vérifié", comp_contact_btn:"Contacter cette usine", comp_gate:"Inscrivez-vous gratuitement pour débloquer le contact direct",
     comp_count_suffix:"fournisseurs trouvés",
+    comp_empty:"Aucune usine vérifiée n'est encore publiée dans cette catégorie. {link} pour apparaître ici dès que nous ouvrirons votre zone.",
+    comp_empty_link:"Inscrivez-vous gratuitement en tant qu'usine",
     comp_seo_p:"La fourchette de prix (€ à €€€) n'est pas déclarée par l'usine : elle est calculée automatiquement à partir des accords réels conclus dans chaque catégorie de matériau, en comparant chaque fournisseur à la moyenne de sa catégorie et de sa zone. Les notes combinent des avis publics vérifiés avec la note directe des constructeurs ayant déjà conclu un accord via Cimbra.",
     comp_price_pattern:"Prix {material} {city}",
     final_h2:"Achetez. Choisissez. Construisez.", final_p:"Laissez-nous votre email et nous vous préviendrons dès que Cimbra sera disponible dans votre région.", final_placeholder:"vous@entreprise.com", final_btn:"Je veux un accès anticipé",
+    final_thanks:"Merci ! Nous vous préviendrons dès que Cimbra sera disponible dans votre région.", final_error:"Un problème est survenu lors de l'envoi. Écrivez-nous à hola@cimbrasolutions.es.",
     foot_bottom:"© 2026 Cimbra. Matériaux de construction, sans friction."
   },
   de:{ nav_como:"So funktioniert's", nav_fabricas:"Für Hersteller", nav_constructoras:"Für Bauunternehmen", nav_comparador:"Vergleich", nav_cta:"Zugang anfragen",
@@ -488,12 +507,15 @@ const translations = {
     trust_eyebrow:"Vertrauen, nicht nur Kontakt", trust_h2:"Jeder Hersteller durchläuft einen Prüfprozess", trust_p:"Bonität, aktuelle Qualitätszertifizierungen und reale Produktionskapazität, bevor er in deiner Angebotsliste erscheint.",
     badge1:"Geprüfter Lieferant", badge2:"Aktuelle Zertifizierungen", badge3:"Echte Erfolgsgeschichten",
     comp_eyebrow:"Erkunden, bevor du Kontakt aufnimmst", comp_h2:"Lieferantenvergleich", comp_p:"Richtpreisspanne, durchschnittliche Lieferzeit und Bewertung geprüfter Hersteller, gefiltert nach Material und Stadt.",
-    comp_all_materials:"Alle Materialien", comp_all_places:"Ganz Spanien",
+    comp_all_materials:"Alle Materialien", comp_international:"International", comp_all_places:"Ganz Spanien",
     comp_rating:"Bewertung", comp_delivery:"Durchschnittliche Lieferzeit", comp_certified:"Geprüfter Lieferant", comp_contact_btn:"Diesen Hersteller kontaktieren", comp_gate:"Kostenlos registrieren, um Direktkontakt freizuschalten",
     comp_count_suffix:"Lieferanten gefunden",
+    comp_empty:"In dieser Kategorie sind noch keine geprüften Hersteller gelistet. {link}, um hier zu erscheinen, sobald wir deine Region öffnen.",
+    comp_empty_link:"Kostenlos als Hersteller registrieren",
     comp_seo_p:"Die Preisspanne (€ bis €€€) wird nicht vom Hersteller selbst angegeben: Sie wird automatisch aus den tatsächlich abgeschlossenen Geschäften je Materialkategorie berechnet, wobei jeder Lieferant mit dem Durchschnitt seiner Kategorie und Region verglichen wird. Die Bewertungen kombinieren geprüfte öffentliche Rezensionen mit direkten Bewertungen von Bauunternehmen, die bereits über Cimbra abgeschlossen haben.",
     comp_price_pattern:"{material}preis {city}",
     final_h2:"Kaufen. Wählen. Bauen.", final_p:"Hinterlasse uns deine E-Mail, wir informieren dich, sobald Cimbra in deiner Region verfügbar ist.", final_placeholder:"du@firma.com", final_btn:"Ich möchte frühen Zugang",
+    final_thanks:"Danke! Wir informieren dich, sobald Cimbra in deiner Region verfügbar ist.", final_error:"Beim Senden ist ein Problem aufgetreten. Schreib uns an hola@cimbrasolutions.es.",
     foot_bottom:"© 2026 Cimbra. Baumaterialien, ohne Reibung."
   }
 };
@@ -513,23 +535,13 @@ const materials = {
   paint:{es:"Pintura",en:"Paint",pt:"Tinta",fr:"Peinture",de:"Farbe"}
 };
 
-const comparadorData = [
-  {name:"Hormigones del Tajo", materialKey:"concrete", city:"Toledo", price:"€€", days:2, rating:4.6, reviews:38, cert:true},
-  {name:"Cerámicas Arévalo", materialKey:"ceramic", city:"Madrid", price:"€", days:5, rating:4.2, reviews:21, cert:true},
-  {name:"Aceros Norte", materialKey:"rebar", city:"Sevilla", price:"€€€", days:4, rating:4.8, reviews:52, cert:true},
-  {name:"Distrib. Castilla", materialKey:"concrete", city:"Madrid", price:"€€", days:1, rating:4.0, reviews:14, cert:false},
-  {name:"Aislamientos Duero", materialKey:"plaster", city:"Toledo", price:"€€", days:3, rating:4.4, reviews:19, cert:true},
-  {name:"Hormigones Turia", materialKey:"concrete", city:"Valencia", price:"€", days:2, rating:4.1, reviews:27, cert:true},
-  {name:"Cementos Ebro", materialKey:"cement", city:"Sevilla", price:"€", days:2, rating:4.3, reviews:16, cert:true},
-  {name:"Áridos del Sur", materialKey:"sand", city:"Sevilla", price:"€", days:1, rating:4.0, reviews:9, cert:true},
-  {name:"Gravas Castilla", materialKey:"gravel", city:"Toledo", price:"€", days:2, rating:4.2, reviews:11, cert:false},
-  {name:"Ladrillos Manchegos", materialKey:"brick", city:"Toledo", price:"€", days:3, rating:4.5, reviews:24, cert:true},
-  {name:"Bloques Levante", materialKey:"cement_block", city:"Valencia", price:"€€", days:3, rating:4.1, reviews:13, cert:true},
-  {name:"Maderas Duero", materialKey:"wood", city:"Madrid", price:"€€€", days:4, rating:4.6, reviews:31, cert:true},
-  {name:"Yesos del Centro", materialKey:"plaster", city:"Madrid", price:"€", days:2, rating:4.0, reviews:8, cert:false},
-  {name:"Cristalería Turia", materialKey:"glass", city:"Valencia", price:"€€", days:5, rating:4.4, reviews:17, cert:true},
-  {name:"Pinturas Andalucía", materialKey:"paint", city:"Sevilla", price:"€€", days:2, rating:4.3, reviews:22, cert:true}
+const spanishRegions = [
+  "Andalucía","Aragón","Principado de Asturias","Illes Balears","Canarias","Cantabria",
+  "Castilla-La Mancha","Castilla y León","Cataluña","Comunidad Valenciana","Extremadura",
+  "Galicia","Comunidad de Madrid","Región de Murcia","Comunidad Foral de Navarra","País Vasco","La Rioja"
 ];
+
+const comparadorData = [];
 
 let currentLang = "es";
 
@@ -543,9 +555,9 @@ function renderComparador(){
 
   matSel.innerHTML = `<option value="">${t.comp_all_materials}</option>` +
     Object.keys(materials).map(k=>`<option value="${k}">${materials[k][currentLang]}</option>`).join('');
-  const cities = [...new Set(comparadorData.map(f=>f.city))];
-  citySel.innerHTML = `<option value="">${t.comp_all_places}</option>` +
-    cities.map(c=>`<option value="${c}">${c}</option>`).join('');
+  citySel.innerHTML = `<option value="internacional">${t.comp_international}</option>` +
+    `<option value="">${t.comp_all_places}</option>` +
+    spanishRegions.map(r=>`<option value="${r}">${r}</option>`).join('');
   matSel.value = prevMat; citySel.value = prevCity;
 
   const mat = matSel.value, city = citySel.value;
@@ -554,28 +566,35 @@ function renderComparador(){
 
   const el = document.getElementById('comp-cards');
   el.innerHTML = '';
-  filtered.forEach(f=>{
-    const card = document.createElement('div');
-    card.className = 'comp-card';
-    card.innerHTML = `
-      <div class="comp-card-top">
-        <div>
-          <h3>${f.name}</h3>
-          <div class="comp-loc">${materials[f.materialKey][currentLang]} · ${f.city}</div>
+  if(filtered.length === 0){
+    const empty = document.createElement('div');
+    empty.className = 'comp-empty';
+    empty.innerHTML = t.comp_empty.replace('{link}', `<a href="registro.html">${t.comp_empty_link}</a>`);
+    el.appendChild(empty);
+  } else {
+    filtered.forEach(f=>{
+      const card = document.createElement('div');
+      card.className = 'comp-card';
+      card.innerHTML = `
+        <div class="comp-card-top">
+          <div>
+            <h3>${f.name}</h3>
+            <div class="comp-loc">${materials[f.materialKey][currentLang]} · ${f.city}</div>
+          </div>
+          <span class="comp-price">${f.price}</span>
         </div>
-        <span class="comp-price">${f.price}</span>
-      </div>
-      <div class="comp-row"><span>${t.comp_rating}</span><span>${comparadorStars(f.rating)} (${f.reviews})</span></div>
-      <div class="comp-row"><span>${t.comp_delivery}</span><span>${f.days} d.</span></div>
-      ${f.cert ? `<div class="comp-cert">✓ ${t.comp_certified}</div>` : ''}
-      <button class="comp-contact-btn">${t.comp_contact_btn}</button>
-      <div class="comp-gate-note">${t.comp_gate}</div>
-    `;
-    el.appendChild(card);
-  });
+        <div class="comp-row"><span>${t.comp_rating}</span><span>${comparadorStars(f.rating)} (${f.reviews})</span></div>
+        <div class="comp-row"><span>${t.comp_delivery}</span><span>${f.days} d.</span></div>
+        ${f.cert ? `<div class="comp-cert">✓ ${t.comp_certified}</div>` : ''}
+        <button class="comp-contact-btn">${t.comp_contact_btn}</button>
+        <div class="comp-gate-note">${t.comp_gate}</div>
+      `;
+      el.appendChild(card);
+    });
+  }
 
   const tagEl = document.getElementById('comp-tag-links');
-  const combos = [["concrete","Madrid"],["brick","Valencia"],["rebar","Sevilla"],["insulation","Toledo"],["concrete","Valencia"],["brick","Madrid"]];
+  const combos = [["concrete","Madrid"],["brick","Valencia"],["rebar","Sevilla"],["plaster","Toledo"],["concrete","Valencia"],["brick","Madrid"]];
   tagEl.innerHTML = combos.map(([mk,c])=>{
     const label = t.comp_price_pattern.replace("{material}", materials[mk][currentLang]).replace("{city}", c);
     return `<a href="#comparador">${label}</a>`;
@@ -598,6 +617,28 @@ function setLanguage(lang){
 
 document.getElementById('lang-switch').addEventListener('change', (e)=> setLanguage(e.target.value));
 setLanguage('es');
+
+document.getElementById('early-access-form').addEventListener('submit', function(e){
+  e.preventDefault();
+  const form = e.target;
+  const feedback = document.getElementById('final-feedback');
+  const submitBtn = form.querySelector('button[type="submit"]');
+  submitBtn.disabled = true;
+  fetch('/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams(new FormData(form)).toString()
+  }).then(()=>{
+    feedback.textContent = translations[currentLang].final_thanks;
+    feedback.style.display = 'block';
+    form.reset();
+    form.style.display = 'none';
+  }).catch(()=>{
+    feedback.textContent = translations[currentLang].final_error;
+    feedback.style.display = 'block';
+    submitBtn.disabled = false;
+  });
+});
 </script>
 
 <!-- CIMBRA AI SUPPORT CHAT -->
@@ -628,8 +669,6 @@ setLanguage('es');
   const messagesEl = document.getElementById('cimbra-chat-messages');
   const input = document.getElementById('cimbra-chat-input');
   const sendBtn = document.getElementById('cimbra-chat-send');
-
-  const SYSTEM_PROMPT = `Eres el asistente de soporte de Cimbra, una plataforma B2B que conecta fábricas/distribuidores de materiales de construcción con constructoras y reformistas. Modelo: licitación inversa (publicar solicitud, fábricas ofertan) y búsqueda directa (comparador de fábricas verificadas). Comisión de éxito 2-3% a la constructora solo si se cierra acuerdo; registro y catálogo siempre gratuitos para fábricas. Responde en español, de forma breve, clara y amable, como soporte al cliente. Si no sabes algo específico de la cuenta del usuario, sugiere escribir a soporte@cimbra.com.`;
 
   let history = [];
   let open = false;
@@ -669,21 +708,16 @@ setLanguage('es');
     messagesEl.appendChild(thinking);
     messagesEl.scrollTop = messagesEl.scrollHeight;
 
-    fetch("https://api.anthropic.com/v1/messages", {
+    fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-6",
-        max_tokens: 400,
-        system: SYSTEM_PROMPT,
-        messages: history
-      })
+      body: JSON.stringify({ messages: history })
     }).then(function(response){ return response.json(); })
       .then(function(data){
         const blocks = data.content || [];
         let reply = '';
         for(let i=0; i<blocks.length; i++){ if(blocks[i].type === 'text'){ reply += blocks[i].text; } }
-        if(!reply){ reply = 'Perdona, no he podido procesar tu pregunta. Escríbenos a soporte@cimbra.com.'; }
+        if(!reply){ reply = 'Perdona, no he podido procesar tu pregunta. Escríbenos a hola@cimbrasolutions.es.'; }
         thinking.remove();
         addMessage('assistant', reply);
         history.push({role:'assistant', content:reply});
@@ -691,7 +725,7 @@ setLanguage('es');
       })
       .catch(function(err){
         thinking.remove();
-        addMessage('assistant', 'Ha habido un problema de conexión. Escríbenos a soporte@cimbra.com si el problema persiste.');
+        addMessage('assistant', 'Ha habido un problema de conexión. Escríbenos a hola@cimbrasolutions.es si el problema persiste.');
         sendBtn.disabled = false;
       });
   }
