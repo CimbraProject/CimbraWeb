@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="cimbra_isotipo_perfil_azul.png">
+<title>Comparador de proveedores | Cimbra</title>
+<meta name="description" content="Compara fábricas de materiales de construcción verificadas por precio, plazo de entrega y valoración, filtrado por material y zona.">
+<link rel="canonical" href="https://cimbrasolutions.es/comparador.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Cimbra">
+<meta property="og:title" content="Comparador de proveedores | Cimbra">
+<meta property="og:description" content="Compara fábricas de materiales de construcción verificadas por precio, plazo de entrega y valoración, filtrado por material y zona.">
+<meta property="og:url" content="https://cimbrasolutions.es/comparador.html">
+<meta property="og:image" content="https://cimbrasolutions.es/cimbra_linkedin_banner.png">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+:root{
+  --blue-900:#08243F; --blue-800:#0C3866; --blue-700:#0C447C; --blue-400:#378ADD; --blue-200:#B5D4F4;
+  --amber-600:#BA7517; --amber-400:#E0A64B;
+  --paper:#F1EFE8; --paper-dim:#E7E4D9;
+  --ink:#1D1C19; --ink-soft:#5F5E5A;
+  --line:rgba(29,28,25,0.12); --line-dark:rgba(241,239,232,0.16);
+  --radius:10px;
+  --disp:'Century Gothic','Futura','Trebuchet MS',sans-serif;
+  --body:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --mono:'SF Mono','Consolas','Menlo',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--body); background:var(--paper); color:var(--ink); line-height:1.5; -webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+.wrap{max-width:1100px;margin:0 auto;padding:0 28px;}
+a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible{outline:2px solid var(--blue-400); outline-offset:2px;}
+
+header{position:sticky; top:0; z-index:50; background:rgba(241,239,232,0.94); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);}
+nav{display:flex; align-items:center; justify-content:space-between; padding:16px 28px; max-width:1100px; margin:0 auto; gap:16px;}
+.brand{display:flex; align-items:center; gap:10px;}
+.brand-text{font-family:var(--disp); font-weight:700; font-size:18px; letter-spacing:0.08em; text-transform:uppercase;}
+.nav-links{display:flex; gap:26px; font-size:13.5px; color:var(--ink-soft);}
+.nav-links a:hover{color:var(--blue-700);}
+.nav-links a.active{color:var(--blue-700); font-weight:600;}
+.nav-right{display:flex; align-items:center; gap:12px;}
+.btn{display:inline-flex; align-items:center; gap:8px; font-size:13.5px; font-weight:600; padding:10px 18px; border-radius:7px; border:1px solid transparent; cursor:pointer; transition:transform .12s ease, background .15s ease;}
+.btn:hover{transform:translateY(-1px);}
+.btn-amber{background:var(--amber-600); color:#fff;}
+.btn-amber:hover{background:#a2680f;}
+.btn-ghost{color:var(--blue-700); font-size:13.5px; font-weight:600;}
+.nav-mobile-hide{display:flex;}
+@media(max-width:860px){ .nav-mobile-hide{display:none;} }
+
+footer{background:var(--blue-900); color:var(--blue-200); padding:36px 0; text-align:center; font-size:12px;}
+
+.page-hero{background:linear-gradient(160deg,var(--blue-800) 0%, var(--blue-900) 75%); color:#fff; padding:44px 0;}
+.page-eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:0.24em; text-transform:uppercase; color:var(--blue-200); margin-bottom:14px;}
+.page-hero h1{font-family:var(--disp); font-weight:700; font-size:clamp(26px,3.6vw,38px); margin-bottom:10px;}
+.page-hero p{color:var(--blue-200); font-size:15px; max-width:60ch;}
+
+section{padding:48px 0;}
+
+.comp-filters{display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:28px;}
+.comp-filters select{font-family:var(--body); font-size:14px; padding:10px 14px; border-radius:7px; border:1px solid var(--line); background:#fff;}
+.comp-count{font-size:13px; color:var(--ink-soft); margin-left:auto;}
+.comp-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:16px;}
+.comp-empty{grid-column:1/-1; text-align:center; padding:40px 20px; border:1px dashed var(--line); border-radius:12px; color:var(--ink-soft); font-size:14px;}
+.comp-empty a{color:var(--blue-700); font-weight:600; text-decoration:underline;}
+.comp-card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:20px 20px 18px;}
+.comp-card-top{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;}
+.comp-card h3{font-family:var(--disp); font-size:16.5px; margin-bottom:3px;}
+.comp-card .comp-loc{font-size:12px; color:var(--ink-soft);}
+.comp-price{font-family:var(--mono); font-size:12.5px; font-weight:600; padding:3px 8px; border-radius:5px; background:var(--paper-dim); color:var(--blue-700);}
+.comp-row{display:flex; justify-content:space-between; font-size:13px; padding:7px 0; border-top:1px solid var(--line);}
+.comp-row span:first-child{color:var(--ink-soft);}
+.comp-cert{display:inline-flex; align-items:center; gap:5px; font-size:11px; color:var(--blue-700); background:var(--blue-200); padding:3px 8px; border-radius:5px; margin-top:10px;}
+.comp-contact-btn{display:block; text-align:center; margin-top:14px; width:100%; padding:10px; border-radius:7px; background:var(--amber-600); color:#fff; font-size:13px; font-weight:600; border:none; cursor:pointer;}
+.comp-gate-note{font-size:11px; color:var(--ink-soft); text-align:center; margin-top:7px;}
+.comp-seo{margin-top:48px; padding-top:40px; border-top:1px solid var(--line);}
+.comp-seo p{color:var(--ink-soft); font-size:14px; max-width:80ch; margin-bottom:14px;}
+.comp-tag-links{display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;}
+.comp-tag-links a{font-size:12.5px; background:#fff; border:1px solid var(--line); padding:6px 12px; border-radius:16px; color:var(--blue-700);}
+.comp-tag-links a:hover{border-color:var(--blue-400);}
+.comp-source-note{display:flex; align-items:center; gap:8px; font-size:11.5px; color:var(--ink-soft); background:var(--paper-dim); border-radius:7px; padding:8px 12px; margin-top:24px;}
+</style>
+</head>
+<body>
+<header>
+  <nav>
+    <a href="index.html" class="brand">
+      <svg viewBox="0 0 64 64" width="24" height="24" fill="none"><path d="M14 54 L14 30 A18 18 0 0 1 50 30 L50 54" stroke="#0C447C" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="brand-text">Cimbra</span>
+    </a>
+    <div class="nav-links nav-mobile-hide">
+      <a href="index.html#como-funciona">Cómo funciona</a>
+      <a href="index.html#fabricas">Para fábricas</a>
+      <a href="index.html#constructoras">Para constructoras</a>
+      <a href="comparador.html" class="active">Comparador</a>
+      <a href="precios.html">Precios</a>
+    </div>
+    <div class="nav-right">
+      <a href="registro.html" class="btn-ghost">Iniciar sesión</a>
+      <a href="registro.html" class="btn btn-amber">Registrarse</a>
+    </div>
+  </nav>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <div class="page-eyebrow">Explora antes de contactar</div>
+    <h1>Comparador de proveedores</h1>
+    <p>Rango de precio orientativo, plazo medio de entrega y valoración de fábricas verificadas, filtrado por material y zona.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="comp-filters">
+      <select id="comp-f-material"></select>
+      <select id="comp-f-ciudad"></select>
+      <span class="comp-count" id="comp-count"></span>
+    </div>
+    <div class="comp-grid" id="comp-cards"></div>
+    <div class="comp-seo">
+      <p>El rango de precio (€ a €€€) no lo declara la fábrica: se calcula de forma automática a partir de los acuerdos reales cerrados en cada categoría de material, comparando cada proveedor contra la media de su categoría y zona. Las valoraciones combinan reseñas verificadas de Google con la puntuación directa de constructoras que ya han cerrado un acuerdo a través de Cimbra.</p>
+      <div class="comp-tag-links" id="comp-tag-links"></div>
+      <div class="comp-source-note">★ Las valoraciones de Google Reviews se muestran cuando la fábrica ha vinculado su ficha de Google Business a su perfil de Cimbra.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+      <div style="display:flex; gap:18px; justify-content:center; flex-wrap:wrap; font-size:11.5px; margin-bottom:14px;">
+        <a href="Cimbra_Aviso_Legal.pdf" target="_blank" style="color:var(--blue-200);">Aviso legal</a>
+        <a href="Cimbra_Terminos_y_Condiciones.pdf" target="_blank" style="color:var(--blue-200);">Términos y condiciones</a>
+        <a href="Cimbra_Condiciones_Intermediacion.pdf" target="_blank" style="color:var(--blue-200);">Condiciones de intermediación</a>
+        <a href="Cimbra_Politica_de_Privacidad.pdf" target="_blank" style="color:var(--blue-200);">Política de privacidad</a>
+        <a href="Cimbra_Politica_de_Cookies.pdf" target="_blank" style="color:var(--blue-200);">Cookies</a>
+      </div>
+      <div style="font-size:11.5px; margin-bottom:14px;"><a href="mailto:info@cimbrasolutions.es" style="color:var(--blue-200);">info@cimbrasolutions.es</a></div>
+      <div>© 2026 Cimbra. Materiales de obra, sin fricción.</div>
+  </div>
+</footer>
+
+<script>
+const materials = {
+  cement:"Cemento", sand:"Arena", gravel:"Grava", concrete:"Hormigón", rebar:"Acero corrugado",
+  brick:"Ladrillos", cement_block:"Bloques de cemento", wood:"Madera", plaster:"Yeso",
+  glass:"Vidrio", ceramic:"Cerámica", paint:"Pintura"
+};
+
+const spanishRegions = [
+  "Andalucía","Aragón","Principado de Asturias","Illes Balears","Canarias","Cantabria",
+  "Castilla-La Mancha","Castilla y León","Cataluña","Comunidad Valenciana","Extremadura",
+  "Galicia","Comunidad de Madrid","Región de Murcia","Comunidad Foral de Navarra","País Vasco","La Rioja"
+];
+
+// Cuando haya fábricas registradas con ficha de Google Business vinculada, cada entrada aquí
+// incluirá su rating/reviews reales obtenidos vía la Google Places API (a través de una función
+// serverless, nunca desde el navegador, para no exponer la API key).
+const comparadorData = [];
+
+function comparadorStars(r){ return '★'.repeat(Math.round(r)) + '☆'.repeat(5-Math.round(r)); }
+
+function renderComparador(){
+  const matSel = document.getElementById('comp-f-material');
+  const citySel = document.getElementById('comp-f-ciudad');
+  const prevMat = matSel.value, prevCity = citySel.value;
+
+  matSel.innerHTML = '<option value="">Todos los materiales</option>' +
+    Object.keys(materials).map(k=>`<option value="${k}">${materials[k]}</option>`).join('');
+  citySel.innerHTML = '<option value="internacional">Internacional</option>' +
+    '<option value="">Toda España</option>' +
+    spanishRegions.map(r=>`<option value="${r}">${r}</option>`).join('');
+  matSel.value = prevMat; citySel.value = prevCity;
+
+  const mat = matSel.value, city = citySel.value;
+  const filtered = comparadorData.filter(f => (!mat || f.materialKey===mat) && (!city || f.city===city));
+  document.getElementById('comp-count').textContent = filtered.length + ' proveedores encontrados';
+
+  const el = document.getElementById('comp-cards');
+  el.innerHTML = '';
+  if(filtered.length === 0){
+    const empty = document.createElement('div');
+    empty.className = 'comp-empty';
+    empty.innerHTML = 'Todavía no hay fábricas verificadas publicadas en esta categoría. <a href="registro.html">Regístrate gratis como fábrica</a> para aparecer aquí en cuanto abramos tu zona.';
+    el.appendChild(empty);
+  } else {
+    filtered.forEach(f=>{
+      const card = document.createElement('div');
+      card.className = 'comp-card';
+      card.innerHTML = `
+        <div class="comp-card-top">
+          <div>
+            <h3>${f.name}</h3>
+            <div class="comp-loc">${materials[f.materialKey]} · ${f.city}</div>
+          </div>
+          <span class="comp-price">${f.price}</span>
+        </div>
+        <div class="comp-row"><span>Valoración</span><span>${comparadorStars(f.rating)} (${f.reviews})</span></div>
+        <div class="comp-row"><span>Plazo medio de entrega</span><span>${f.days} d.</span></div>
+        ${f.cert ? '<div class="comp-cert">✓ Proveedor verificado</div>' : ''}
+        <button class="comp-contact-btn">Contactar con esta fábrica</button>
+        <div class="comp-gate-note">Regístrate gratis para desbloquear el contacto directo</div>
+      `;
+      el.appendChild(card);
+    });
+  }
+
+  const tagEl = document.getElementById('comp-tag-links');
+  const combos = [["concrete","Comunidad de Madrid"],["brick","Comunidad Valenciana"],["rebar","Andalucía"],["plaster","Castilla-La Mancha"]];
+  tagEl.innerHTML = combos.map(([mk,c])=>`<a href="comparador.html">Precio ${materials[mk]} ${c}</a>`).join('');
+}
+
+renderComparador();
+</script>
+</body>
+</html>

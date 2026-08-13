@@ -133,29 +133,6 @@
   .mini-badge{border:1px solid var(--line-dark); border-radius:7px; padding:14px 16px; font-size:13px; display:flex; gap:10px; align-items:center; color:var(--blue-200);}
   .mini-badge b{color:#fff; font-family:var(--mono); font-weight:500;}
 
-  .comparador{background:#fff;}
-  .comp-filters{display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:28px;}
-  .comp-filters select{font-family:var(--body); font-size:14px; padding:10px 14px; border-radius:7px; border:1px solid var(--line); background:var(--paper);}
-  .comp-count{font-size:13px; color:var(--ink-soft); margin-left:auto;}
-  .comp-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:16px;}
-  .comp-empty{grid-column:1/-1; text-align:center; padding:40px 20px; border:1px dashed var(--line); border-radius:12px; color:var(--ink-soft); font-size:14px;}
-  .comp-empty a{color:var(--blue-700); font-weight:600; text-decoration:underline;}
-  .comp-card{background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:20px 20px 18px;}
-  .comp-card-top{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;}
-  .comp-card h3{font-family:var(--disp); font-size:16.5px; margin-bottom:3px;}
-  .comp-card .comp-loc{font-size:12px; color:var(--ink-soft);}
-  .comp-price{font-family:var(--mono); font-size:12.5px; font-weight:600; padding:3px 8px; border-radius:5px; background:var(--paper-dim); color:var(--blue-700);}
-  .comp-row{display:flex; justify-content:space-between; font-size:13px; padding:7px 0; border-top:1px solid var(--line);}
-  .comp-row span:first-child{color:var(--ink-soft);}
-  .comp-cert{display:inline-flex; align-items:center; gap:5px; font-size:11px; color:var(--blue-700); background:var(--blue-200); padding:3px 8px; border-radius:5px; margin-top:10px;}
-  .comp-contact-btn{display:block; text-align:center; margin-top:14px; width:100%; padding:10px; border-radius:7px; background:var(--amber-600); color:#fff; font-size:13px; font-weight:600; border:none; cursor:pointer;}
-  .comp-gate-note{font-size:11px; color:var(--ink-soft); text-align:center; margin-top:7px;}
-  .comp-seo{margin-top:48px; padding-top:40px; border-top:1px solid var(--line);}
-  .comp-seo p{color:var(--ink-soft); font-size:14px; max-width:80ch; margin-bottom:14px;}
-  .comp-tag-links{display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;}
-  .comp-tag-links a{font-size:12.5px; background:var(--paper); border:1px solid var(--line); padding:6px 12px; border-radius:16px; color:var(--blue-700);}
-  .comp-tag-links a:hover{border-color:var(--blue-400);}
-
   .final-cta{background:var(--amber-600); color:#fff; text-align:center;}
   .final-cta h2{color:#fff; margin-bottom:12px;}
   .final-cta p{color:rgba(255,255,255,0.85); margin-bottom:30px; max-width:52ch; margin-left:auto; margin-right:auto;}
@@ -183,7 +160,7 @@
       <a href="#como-funciona" data-i18n="nav_como">Cómo funciona</a>
       <a href="#fabricas" data-i18n="nav_fabricas">Para fábricas</a>
       <a href="#constructoras" data-i18n="nav_constructoras">Para constructoras</a>
-      <a href="#comparador" data-i18n="nav_comparador">Comparador</a>
+      <a href="comparador.html" data-i18n="nav_comparador">Comparador</a>
       <a href="precios.html" data-i18n="nav_precios">Precios</a>
     </div>
     <div class="nav-right">
@@ -311,26 +288,6 @@
   </div>
 </section>
 
-<section class="comparador" id="comparador">
-  <div class="wrap">
-    <div class="sec-head">
-      <div class="sec-eyebrow" data-i18n="comp_eyebrow">Explora antes de contactar</div>
-      <h2 data-i18n="comp_h2">Comparador de proveedores</h2>
-      <p data-i18n="comp_p">Rango de precio orientativo, plazo medio de entrega y valoración de fábricas verificadas, filtrado por material y ciudad.</p>
-    </div>
-    <div class="comp-filters">
-      <select id="comp-f-material"></select>
-      <select id="comp-f-ciudad"></select>
-      <span class="comp-count" id="comp-count"></span>
-    </div>
-    <div class="comp-grid" id="comp-cards"></div>
-    <div class="comp-seo">
-      <p data-i18n="comp_seo_p">El rango de precio (€ a €€€) no lo declara la fábrica: se calcula de forma automática a partir de los acuerdos reales cerrados en cada categoría de material, comparando cada proveedor contra la media de su categoría y zona. Las valoraciones combinan reseñas públicas verificadas con la puntuación directa de constructoras que ya han cerrado un acuerdo a través de Cimbra.</p>
-      <div class="comp-tag-links" id="comp-tag-links"></div>
-    </div>
-  </div>
-</section>
-
 <section class="final-cta" id="acceso">
   <div class="wrap">
     <h2 data-i18n="final_h2">Compra. Elige. Construye.</h2>
@@ -398,14 +355,6 @@ const translations = {
     step4_h4:"Cierra el acuerdo", step4_p:"Confírmalo dentro de Cimbra y queda registrado como caso de éxito.",
     trust_eyebrow:"Confianza, no solo contacto", trust_h2:"Cada fábrica pasa por un proceso de verificación", trust_p:"Solvencia, certificaciones de calidad y capacidad real de producción, antes de que aparezca en tu lista de ofertas.",
     badge1:"Proveedor verificado", badge2:"Certificaciones al día", badge3:"Casos de éxito reales",
-    comp_eyebrow:"Explora antes de contactar", comp_h2:"Comparador de proveedores", comp_p:"Rango de precio orientativo, plazo medio de entrega y valoración de fábricas verificadas, filtrado por material y ciudad.",
-    comp_all_materials:"Todos los materiales", comp_international:"Internacional", comp_all_places:"Toda España",
-    comp_rating:"Valoración", comp_delivery:"Plazo medio de entrega", comp_certified:"Proveedor verificado", comp_contact_btn:"Contactar con esta fábrica", comp_gate:"Regístrate gratis para desbloquear el contacto directo",
-    comp_count_suffix:"proveedores encontrados",
-    comp_empty:"Todavía no hay fábricas verificadas publicadas en esta categoría. {link} para aparecer aquí en cuanto abramos tu zona.",
-    comp_empty_link:"Regístrate gratis como fábrica",
-    comp_seo_p:"El rango de precio (€ a €€€) no lo declara la fábrica: se calcula de forma automática a partir de los acuerdos reales cerrados en cada categoría de material, comparando cada proveedor contra la media de su categoría y zona. Las valoraciones combinan reseñas públicas verificadas con la puntuación directa de constructoras que ya han cerrado un acuerdo a través de Cimbra.",
-    comp_price_pattern:"Precio {material} {city}",
     final_h2:"Compra. Elige. Construye.", final_p:"Déjanos tu email y te avisamos en cuanto Cimbra esté disponible en tu zona.", final_placeholder:"tu@empresa.com", final_btn:"Quiero acceso anticipado",
     final_thanks:"¡Gracias! Te avisaremos en cuanto Cimbra esté disponible en tu zona.", final_error:"Ha habido un problema al enviar tu email. Escríbenos a hola@cimbrasolutions.es.",
     foot_bottom:"© 2026 Cimbra. Materiales de obra, sin fricción."
@@ -432,14 +381,6 @@ const translations = {
     step4_h4:"Close the deal", step4_p:"Confirm it inside Cimbra and it gets logged as a success story.",
     trust_eyebrow:"Trust, not just contact", trust_h2:"Every factory goes through a verification process", trust_p:"Solvency, up-to-date quality certifications and real production capacity, before it appears in your list of offers.",
     badge1:"Verified supplier", badge2:"Certifications up to date", badge3:"Real success stories",
-    comp_eyebrow:"Explore before you reach out", comp_h2:"Supplier comparator", comp_p:"Indicative price range, average delivery time and rating of verified factories, filtered by material and city.",
-    comp_all_materials:"All materials", comp_international:"International", comp_all_places:"All of Spain",
-    comp_rating:"Rating", comp_delivery:"Average delivery time", comp_certified:"Verified supplier", comp_contact_btn:"Contact this factory", comp_gate:"Sign up for free to unlock direct contact",
-    comp_count_suffix:"suppliers found",
-    comp_empty:"There are no verified factories listed in this category yet. {link} to appear here as soon as we open your area.",
-    comp_empty_link:"Sign up for free as a factory",
-    comp_seo_p:"The price range (€ to €€€) isn't self-declared by the factory: it's calculated automatically from real deals closed in each material category, comparing every supplier against the average for its category and region. Ratings combine verified public reviews with direct scores from builders who have already closed a deal through Cimbra.",
-    comp_price_pattern:"{material} price {city}",
     final_h2:"Buy. Choose. Build.", final_p:"Leave us your email and we'll let you know as soon as Cimbra is available in your area.", final_placeholder:"you@company.com", final_btn:"I want early access",
     final_thanks:"Thanks! We'll let you know as soon as Cimbra is available in your area.", final_error:"There was a problem sending your email. Write to us at hola@cimbrasolutions.es.",
     foot_bottom:"© 2026 Cimbra. Construction materials, without friction."
@@ -466,14 +407,6 @@ const translations = {
     step4_h4:"Fecha o acordo", step4_p:"Confirma dentro da Cimbra e fica registado como caso de sucesso.",
     trust_eyebrow:"Confiança, não só contacto", trust_h2:"Cada fábrica passa por um processo de verificação", trust_p:"Solvência, certificações de qualidade em dia e capacidade real de produção, antes de aparecer na tua lista de propostas.",
     badge1:"Fornecedor verificado", badge2:"Certificações em dia", badge3:"Casos de sucesso reais",
-    comp_eyebrow:"Explora antes de contactar", comp_h2:"Comparador de fornecedores", comp_p:"Faixa de preço indicativa, prazo médio de entrega e avaliação de fábricas verificadas, filtrado por material e cidade.",
-    comp_all_materials:"Todos os materiais", comp_international:"Internacional", comp_all_places:"Toda a Espanha",
-    comp_rating:"Avaliação", comp_delivery:"Prazo médio de entrega", comp_certified:"Fornecedor verificado", comp_contact_btn:"Contactar esta fábrica", comp_gate:"Regista-te gratuitamente para desbloquear o contacto direto",
-    comp_count_suffix:"fornecedores encontrados",
-    comp_empty:"Ainda não há fábricas verificadas publicadas nesta categoria. {link} para apareceres aqui assim que abrirmos a tua zona.",
-    comp_empty_link:"Regista-te gratuitamente como fábrica",
-    comp_seo_p:"A faixa de preço (€ a €€€) não é autodeclarada pela fábrica: é calculada automaticamente a partir dos acordos reais fechados em cada categoria de material, comparando cada fornecedor com a média da sua categoria e zona. As avaliações combinam reviews públicas verificadas com a pontuação direta de construtoras que já fecharam um acordo através da Cimbra.",
-    comp_price_pattern:"Preço {material} {city}",
     final_h2:"Compra. Escolhe. Constrói.", final_p:"Deixa-nos o teu email e avisamos-te assim que a Cimbra estiver disponível na tua zona.", final_placeholder:"tu@empresa.com", final_btn:"Quero acesso antecipado",
     final_thanks:"Obrigado! Avisamos-te assim que a Cimbra estiver disponível na tua zona.", final_error:"Houve um problema ao enviar o teu email. Escreve-nos para hola@cimbrasolutions.es.",
     foot_bottom:"© 2026 Cimbra. Materiais de obra, sem fricção."
@@ -500,14 +433,6 @@ const translations = {
     step4_h4:"Concluez l'accord", step4_p:"Confirmez-le dans Cimbra et il est enregistré comme une réussite.",
     trust_eyebrow:"Confiance, pas seulement contact", trust_h2:"Chaque usine passe par un processus de vérification", trust_p:"Solvabilité, certifications qualité à jour et capacité de production réelle, avant d'apparaître dans votre liste d'offres.",
     badge1:"Fournisseur vérifié", badge2:"Certifications à jour", badge3:"Réussites réelles",
-    comp_eyebrow:"Explorez avant de contacter", comp_h2:"Comparateur de fournisseurs", comp_p:"Fourchette de prix indicative, délai moyen de livraison et note des usines vérifiées, filtrés par matériau et ville.",
-    comp_all_materials:"Tous les matériaux", comp_international:"International", comp_all_places:"Toute l'Espagne",
-    comp_rating:"Note", comp_delivery:"Délai moyen de livraison", comp_certified:"Fournisseur vérifié", comp_contact_btn:"Contacter cette usine", comp_gate:"Inscrivez-vous gratuitement pour débloquer le contact direct",
-    comp_count_suffix:"fournisseurs trouvés",
-    comp_empty:"Aucune usine vérifiée n'est encore publiée dans cette catégorie. {link} pour apparaître ici dès que nous ouvrirons votre zone.",
-    comp_empty_link:"Inscrivez-vous gratuitement en tant qu'usine",
-    comp_seo_p:"La fourchette de prix (€ à €€€) n'est pas déclarée par l'usine : elle est calculée automatiquement à partir des accords réels conclus dans chaque catégorie de matériau, en comparant chaque fournisseur à la moyenne de sa catégorie et de sa zone. Les notes combinent des avis publics vérifiés avec la note directe des constructeurs ayant déjà conclu un accord via Cimbra.",
-    comp_price_pattern:"Prix {material} {city}",
     final_h2:"Achetez. Choisissez. Construisez.", final_p:"Laissez-nous votre email et nous vous préviendrons dès que Cimbra sera disponible dans votre région.", final_placeholder:"vous@entreprise.com", final_btn:"Je veux un accès anticipé",
     final_thanks:"Merci ! Nous vous préviendrons dès que Cimbra sera disponible dans votre région.", final_error:"Un problème est survenu lors de l'envoi. Écrivez-nous à hola@cimbrasolutions.es.",
     foot_bottom:"© 2026 Cimbra. Matériaux de construction, sans friction."
@@ -534,100 +459,13 @@ const translations = {
     step4_h4:"Abschluss bestätigen", step4_p:"Bestätige ihn in Cimbra, und er wird als Erfolgsgeschichte erfasst.",
     trust_eyebrow:"Vertrauen, nicht nur Kontakt", trust_h2:"Jeder Hersteller durchläuft einen Prüfprozess", trust_p:"Bonität, aktuelle Qualitätszertifizierungen und reale Produktionskapazität, bevor er in deiner Angebotsliste erscheint.",
     badge1:"Geprüfter Lieferant", badge2:"Aktuelle Zertifizierungen", badge3:"Echte Erfolgsgeschichten",
-    comp_eyebrow:"Erkunden, bevor du Kontakt aufnimmst", comp_h2:"Lieferantenvergleich", comp_p:"Richtpreisspanne, durchschnittliche Lieferzeit und Bewertung geprüfter Hersteller, gefiltert nach Material und Stadt.",
-    comp_all_materials:"Alle Materialien", comp_international:"International", comp_all_places:"Ganz Spanien",
-    comp_rating:"Bewertung", comp_delivery:"Durchschnittliche Lieferzeit", comp_certified:"Geprüfter Lieferant", comp_contact_btn:"Diesen Hersteller kontaktieren", comp_gate:"Kostenlos registrieren, um Direktkontakt freizuschalten",
-    comp_count_suffix:"Lieferanten gefunden",
-    comp_empty:"In dieser Kategorie sind noch keine geprüften Hersteller gelistet. {link}, um hier zu erscheinen, sobald wir deine Region öffnen.",
-    comp_empty_link:"Kostenlos als Hersteller registrieren",
-    comp_seo_p:"Die Preisspanne (€ bis €€€) wird nicht vom Hersteller selbst angegeben: Sie wird automatisch aus den tatsächlich abgeschlossenen Geschäften je Materialkategorie berechnet, wobei jeder Lieferant mit dem Durchschnitt seiner Kategorie und Region verglichen wird. Die Bewertungen kombinieren geprüfte öffentliche Rezensionen mit direkten Bewertungen von Bauunternehmen, die bereits über Cimbra abgeschlossen haben.",
-    comp_price_pattern:"{material}preis {city}",
     final_h2:"Kaufen. Wählen. Bauen.", final_p:"Hinterlasse uns deine E-Mail, wir informieren dich, sobald Cimbra in deiner Region verfügbar ist.", final_placeholder:"du@firma.com", final_btn:"Ich möchte frühen Zugang",
     final_thanks:"Danke! Wir informieren dich, sobald Cimbra in deiner Region verfügbar ist.", final_error:"Beim Senden ist ein Problem aufgetreten. Schreib uns an hola@cimbrasolutions.es.",
     foot_bottom:"© 2026 Cimbra. Baumaterialien, ohne Reibung."
   }
 };
 
-const materials = {
-  cement:{es:"Cemento",en:"Cement",pt:"Cimento",fr:"Ciment",de:"Zement"},
-  sand:{es:"Arena",en:"Sand",pt:"Areia",fr:"Sable",de:"Sand"},
-  gravel:{es:"Grava",en:"Gravel",pt:"Gravilha",fr:"Gravier",de:"Kies"},
-  concrete:{es:"Hormigón",en:"Concrete",pt:"Betão",fr:"Béton",de:"Beton"},
-  rebar:{es:"Acero corrugado",en:"Rebar steel",pt:"Aço corrugado",fr:"Acier corrugué",de:"Bewehrungsstahl"},
-  brick:{es:"Ladrillos",en:"Bricks",pt:"Tijolos",fr:"Briques",de:"Ziegel"},
-  cement_block:{es:"Bloques de cemento",en:"Cement blocks",pt:"Blocos de cimento",fr:"Blocs de ciment",de:"Zementblöcke"},
-  wood:{es:"Madera",en:"Wood",pt:"Madeira",fr:"Bois",de:"Holz"},
-  plaster:{es:"Yeso",en:"Plaster",pt:"Gesso",fr:"Plâtre",de:"Gips"},
-  glass:{es:"Vidrio",en:"Glass",pt:"Vidro",fr:"Verre",de:"Glas"},
-  ceramic:{es:"Cerámica",en:"Ceramics",pt:"Cerâmica",fr:"Céramique",de:"Keramik"},
-  paint:{es:"Pintura",en:"Paint",pt:"Tinta",fr:"Peinture",de:"Farbe"}
-};
-
-const spanishRegions = [
-  "Andalucía","Aragón","Principado de Asturias","Illes Balears","Canarias","Cantabria",
-  "Castilla-La Mancha","Castilla y León","Cataluña","Comunidad Valenciana","Extremadura",
-  "Galicia","Comunidad de Madrid","Región de Murcia","Comunidad Foral de Navarra","País Vasco","La Rioja"
-];
-
-const comparadorData = [];
-
 let currentLang = "es";
-
-function comparadorStars(r){ return '★'.repeat(Math.round(r)) + '☆'.repeat(5-Math.round(r)); }
-
-function renderComparador(){
-  const t = translations[currentLang];
-  const matSel = document.getElementById('comp-f-material');
-  const citySel = document.getElementById('comp-f-ciudad');
-  const prevMat = matSel.value, prevCity = citySel.value;
-
-  matSel.innerHTML = `<option value="">${t.comp_all_materials}</option>` +
-    Object.keys(materials).map(k=>`<option value="${k}">${materials[k][currentLang]}</option>`).join('');
-  citySel.innerHTML = `<option value="internacional">${t.comp_international}</option>` +
-    `<option value="">${t.comp_all_places}</option>` +
-    spanishRegions.map(r=>`<option value="${r}">${r}</option>`).join('');
-  matSel.value = prevMat; citySel.value = prevCity;
-
-  const mat = matSel.value, city = citySel.value;
-  const filtered = comparadorData.filter(f => (!mat || f.materialKey===mat) && (!city || f.city===city));
-  document.getElementById('comp-count').textContent = filtered.length + ' ' + t.comp_count_suffix;
-
-  const el = document.getElementById('comp-cards');
-  el.innerHTML = '';
-  if(filtered.length === 0){
-    const empty = document.createElement('div');
-    empty.className = 'comp-empty';
-    empty.innerHTML = t.comp_empty.replace('{link}', `<a href="registro.html">${t.comp_empty_link}</a>`);
-    el.appendChild(empty);
-  } else {
-    filtered.forEach(f=>{
-      const card = document.createElement('div');
-      card.className = 'comp-card';
-      card.innerHTML = `
-        <div class="comp-card-top">
-          <div>
-            <h3>${f.name}</h3>
-            <div class="comp-loc">${materials[f.materialKey][currentLang]} · ${f.city}</div>
-          </div>
-          <span class="comp-price">${f.price}</span>
-        </div>
-        <div class="comp-row"><span>${t.comp_rating}</span><span>${comparadorStars(f.rating)} (${f.reviews})</span></div>
-        <div class="comp-row"><span>${t.comp_delivery}</span><span>${f.days} d.</span></div>
-        ${f.cert ? `<div class="comp-cert">✓ ${t.comp_certified}</div>` : ''}
-        <button class="comp-contact-btn">${t.comp_contact_btn}</button>
-        <div class="comp-gate-note">${t.comp_gate}</div>
-      `;
-      el.appendChild(card);
-    });
-  }
-
-  const tagEl = document.getElementById('comp-tag-links');
-  const combos = [["concrete","Madrid"],["brick","Valencia"],["rebar","Sevilla"],["plaster","Toledo"],["concrete","Valencia"],["brick","Madrid"]];
-  tagEl.innerHTML = combos.map(([mk,c])=>{
-    const label = t.comp_price_pattern.replace("{material}", materials[mk][currentLang]).replace("{city}", c);
-    return `<a href="#comparador">${label}</a>`;
-  }).join('');
-}
 
 function setLanguage(lang){
   currentLang = lang;
@@ -640,7 +478,6 @@ function setLanguage(lang){
     t.hero_pre + '<em>' + t.hero_em1 + '</em>' + t.hero_mid + '<em>' + t.hero_em2 + '</em>' + t.hero_end;
   document.getElementById('final-email').setAttribute('placeholder', t.final_placeholder);
   document.documentElement.lang = lang;
-  renderComparador();
 }
 
 document.getElementById('lang-switch').addEventListener('change', (e)=> setLanguage(e.target.value));
