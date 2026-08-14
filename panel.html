@@ -78,6 +78,13 @@ textarea{resize:vertical; min-height:90px;}
 </style>
 </head>
 <body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+<script>
+sb.auth.getSession().then(({ data: { session } })=>{
+  if(!session){ window.location.href = 'registro.html'; }
+});
+</script>
 <header>
   <nav>
     <a href="index.html" class="brand">
@@ -90,7 +97,7 @@ textarea{resize:vertical; min-height:90px;}
       <a href="panel.html" id="nl-panel">Mi panel</a>
     </div>
     <div class="nav-right">
-      <a href="index.html" class="btn-ghost">Cerrar sesión</a>
+      <a href="#" id="logout-link" class="btn-ghost">Cerrar sesión</a>
     </div>
   </nav>
 </header>
@@ -172,6 +179,12 @@ document.querySelectorAll('.panel-tabs button').forEach(btn=>{
   });
 });
 document.getElementById('nl-panel').classList.add('active');
+
+document.getElementById('logout-link').addEventListener('click', async (e)=>{
+  e.preventDefault();
+  await sb.auth.signOut();
+  window.location.href = 'index.html';
+});
 
 document.getElementById('perfil-logo').addEventListener('change', (e)=>{
   const file = e.target.files[0];

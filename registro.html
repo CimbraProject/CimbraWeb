@@ -66,6 +66,8 @@ input[type=text], input[type=email], input[type=password], input[type=number], i
 textarea{resize:vertical; min-height:90px;}
 .field-row{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
 @media(max-width:640px){ .field-row{grid-template-columns:1fr;} }
+.form-error{display:none; background:#FBE9E7; color:#B3261E; font-size:12.5px; padding:10px 12px; border-radius:7px; margin-bottom:14px;}
+.form-note{text-align:center; font-size:13px; color:var(--ink-soft); margin-top:12px;}
 
 </style>
 </head>
@@ -108,30 +110,32 @@ textarea{resize:vertical; min-height:90px;}
 
     <form class="card" id="form-registro-constructora">
       <div class="field-row">
-        <div><label>Nombre de la empresa / autónomo</label><input type="text" required placeholder="Nombre de tu empresa"></div>
-        <div><label>CIF / NIF</label><input type="text" required placeholder="B12345678"></div>
+        <div><label>Nombre de la empresa / autónomo</label><input type="text" id="signup-c-name" required placeholder="Nombre de tu empresa"></div>
+        <div><label>CIF / NIF</label><input type="text" id="signup-c-cif" required placeholder="B12345678"></div>
       </div>
       <div class="field-row">
         <div><label>Provincia</label><select><option>Toledo</option><option>Madrid</option><option>Valencia</option><option>Sevilla</option></select></div>
         <div><label>Volumen aproximado de obra al año</label><select><option>Menos de 5 obras</option><option>5 a 20 obras</option><option>Más de 20 obras</option></select></div>
       </div>
-      <label>Email de contacto</label><input type="email" required placeholder="tu@empresa.com">
-      <label>Contraseña</label><input type="password" required minlength="8" placeholder="••••••••">
+      <label>Email de contacto</label><input type="email" id="signup-c-email" required placeholder="tu@empresa.com">
+      <label>Contraseña</label><input type="password" id="signup-c-password" required minlength="8" placeholder="••••••••">
+      <p class="form-error" id="signup-c-error"></p>
       <button class="btn btn-amber" type="submit" id="signup-constructora-btn" style="width:100%; justify-content:center; padding:13px;">Crear cuenta de constructora</button>
     </form>
 
     <form class="card" id="form-registro-fabrica" style="display:none;">
       <div class="field-row">
-        <div><label>Nombre de la fábrica / distribuidor</label><input type="text" required placeholder="Nombre de tu fábrica"></div>
-        <div><label>CIF</label><input type="text" required placeholder="A87654321"></div>
+        <div><label>Nombre de la fábrica / distribuidor</label><input type="text" id="signup-f-name" required placeholder="Nombre de tu fábrica"></div>
+        <div><label>CIF</label><input type="text" id="signup-f-cif" required placeholder="A87654321"></div>
       </div>
       <div class="field-row">
         <div><label>Material principal</label><select><option>Cemento</option><option>Arena</option><option>Grava</option><option>Hormigón</option><option>Acero corrugado</option><option>Ladrillos</option><option>Bloques de cemento</option><option>Madera</option><option>Yeso</option><option>Vidrio</option><option>Cerámica</option><option>Pintura</option></select></div>
         <div><label>Zona de cobertura</label><select><option>Provincial</option><option>Regional</option><option>Nacional</option></select></div>
       </div>
       <label>Certificaciones de calidad (opcional, se verifican después)</label><input type="text" placeholder="Ej. ISO 9001, marcado CE">
-      <label>Email de contacto</label><input type="email" required placeholder="ventas@fabrica.com">
-      <label>Contraseña</label><input type="password" required minlength="8" placeholder="••••••••">
+      <label>Email de contacto</label><input type="email" id="signup-f-email" required placeholder="ventas@fabrica.com">
+      <label>Contraseña</label><input type="password" id="signup-f-password" required minlength="8" placeholder="••••••••">
+      <p class="form-error" id="signup-f-error"></p>
       <button class="btn btn-amber" type="submit" id="signup-fabrica-btn" style="width:100%; justify-content:center; padding:13px;">Crear cuenta de fábrica</button>
       <p style="font-size:11.5px; color:var(--ink-soft); margin-top:12px;">El registro y el perfil de catálogo son siempre gratuitos para fábricas.</p>
     </form>
@@ -158,7 +162,19 @@ textarea{resize:vertical; min-height:90px;}
       <form class="card" id="form-login">
         <label>Email</label><input type="email" id="login-email" required placeholder="tu@empresa.com">
         <label>Contraseña</label><input type="password" id="login-password" required placeholder="••••••••">
+        <p class="form-error" id="login-error"></p>
         <button class="btn btn-blue" type="submit" id="login-btn" style="width:100%; justify-content:center; padding:13px;">Iniciar sesión</button>
+      </form>
+    </div>
+
+    <div id="verify-section" style="display:none;">
+      <form class="card" id="form-verify">
+        <p style="font-size:13.5px; margin-bottom:16px;">Te hemos enviado un código de 6 dígitos a <strong id="verify-email"></strong>. Introdúcelo para activar tu cuenta.</p>
+        <label>Código de verificación</label>
+        <input type="text" id="verify-code" required inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="123456">
+        <p class="form-error" id="verify-error"></p>
+        <button class="btn btn-amber" type="submit" id="verify-btn" style="width:100%; justify-content:center; padding:13px;">Confirmar código</button>
+        <p class="form-note">¿No te ha llegado? <a href="#" id="resend-code" style="color:var(--blue-700); font-weight:600;">Reenviar código</a></p>
       </form>
     </div>
   </div>
@@ -178,6 +194,8 @@ textarea{resize:vertical; min-height:90px;}
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
 <script>
 document.querySelectorAll('.role-tab').forEach(btn=>{
   btn.addEventListener('click', ()=>{
@@ -199,16 +217,101 @@ document.getElementById('show-signup').addEventListener('click', (e)=>{
   document.getElementById('signup-section').style.display = 'block';
 });
 
+function showError(id, msg){
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+function clearError(id){
+  document.getElementById(id).style.display = 'none';
+}
+function goToSection(name){
+  document.getElementById('signup-section').style.display = name==='signup' ? 'block':'none';
+  document.getElementById('login-section').style.display = name==='login' ? 'block':'none';
+  document.getElementById('verify-section').style.display = name==='verify' ? 'block':'none';
+}
+
+let pendingEmail = '';
+
+async function signUpCompany({ email, password, role, companyName, cif, btn, errorId }){
+  clearError(errorId);
+  btn.disabled = true;
+  const { error } = await sb.auth.signUp({
+    email, password,
+    options: { data: { role, company_name: companyName, cif } }
+  });
+  btn.disabled = false;
+  if(error){ showError(errorId, error.message); return; }
+  pendingEmail = email;
+  document.getElementById('verify-email').textContent = email;
+  goToSection('verify');
+}
+
 document.getElementById('form-registro-constructora').addEventListener('submit', (e)=>{
   e.preventDefault();
-  window.location.href = 'panel.html';
+  signUpCompany({
+    email: document.getElementById('signup-c-email').value,
+    password: document.getElementById('signup-c-password').value,
+    role: 'constructora',
+    companyName: document.getElementById('signup-c-name').value,
+    cif: document.getElementById('signup-c-cif').value,
+    btn: document.getElementById('signup-constructora-btn'),
+    errorId: 'signup-c-error'
+  });
 });
+
 document.getElementById('form-registro-fabrica').addEventListener('submit', (e)=>{
   e.preventDefault();
+  signUpCompany({
+    email: document.getElementById('signup-f-email').value,
+    password: document.getElementById('signup-f-password').value,
+    role: 'fabrica',
+    companyName: document.getElementById('signup-f-name').value,
+    cif: document.getElementById('signup-f-cif').value,
+    btn: document.getElementById('signup-fabrica-btn'),
+    errorId: 'signup-f-error'
+  });
+});
+
+document.getElementById('form-verify').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  clearError('verify-error');
+  const code = document.getElementById('verify-code').value.trim();
+  const btn = document.getElementById('verify-btn');
+  btn.disabled = true;
+  const { error } = await sb.auth.verifyOtp({ email: pendingEmail, token: code, type: 'signup' });
+  btn.disabled = false;
+  if(error){ showError('verify-error', 'Código incorrecto o caducado. Revísalo o pide uno nuevo.'); return; }
   window.location.href = 'panel.html';
 });
-document.getElementById('form-login').addEventListener('submit', (e)=>{
+
+document.getElementById('resend-code').addEventListener('click', async (e)=>{
   e.preventDefault();
+  clearError('verify-error');
+  const { error } = await sb.auth.resend({ type: 'signup', email: pendingEmail });
+  if(error){ showError('verify-error', error.message); return; }
+  showError('verify-error', 'Te hemos enviado un nuevo código.');
+});
+
+document.getElementById('form-login').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  clearError('login-error');
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+  const btn = document.getElementById('login-btn');
+  btn.disabled = true;
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  btn.disabled = false;
+  if(error){
+    if(error.message.toLowerCase().includes('confirm')){
+      pendingEmail = email;
+      document.getElementById('verify-email').textContent = email;
+      goToSection('verify');
+      return;
+    }
+    showError('login-error', 'Email o contraseña incorrectos.');
+    return;
+  }
   window.location.href = 'panel.html';
 });
 </script>
