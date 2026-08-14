@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="cimbra_isotipo_perfil_azul.png">
+<title>Perfil de empresa | Cimbra</title>
+<meta name="robots" content="noindex,follow">
+<style>
+:root{
+  --blue-900:#08243F; --blue-800:#0C3866; --blue-700:#0C447C; --blue-400:#378ADD; --blue-200:#B5D4F4;
+  --amber-600:#BA7517; --amber-400:#E0A64B;
+  --paper:#F1EFE8; --paper-dim:#E7E4D9;
+  --ink:#1D1C19; --ink-soft:#5F5E5A;
+  --line:rgba(29,28,25,0.12); --line-dark:rgba(241,239,232,0.16);
+  --radius:10px;
+  --disp:'Century Gothic','Futura','Trebuchet MS',sans-serif;
+  --body:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --mono:'SF Mono','Consolas','Menlo',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--body); background:var(--paper); color:var(--ink); line-height:1.5; -webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+.wrap{max-width:800px;margin:0 auto;padding:0 28px;}
+a:focus-visible, button:focus-visible{outline:2px solid var(--blue-400); outline-offset:2px;}
+
+header{position:sticky; top:0; z-index:50; background:rgba(241,239,232,0.94); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);}
+nav{display:flex; align-items:center; justify-content:space-between; padding:16px 28px; max-width:1100px; margin:0 auto; gap:16px;}
+.brand{display:flex; align-items:center; gap:10px;}
+.brand-text{font-family:var(--disp); font-weight:700; font-size:18px; letter-spacing:0.08em; text-transform:uppercase;}
+.btn{display:inline-flex; align-items:center; gap:8px; font-size:13.5px; font-weight:600; padding:10px 18px; border-radius:7px; border:1px solid transparent; cursor:pointer;}
+.btn-ghost{color:var(--blue-700);}
+
+footer{background:var(--blue-900); color:var(--blue-200); padding:36px 0; text-align:center; font-size:12px;}
+
+section{padding:48px 0;}
+.avatar{width:64px; height:64px; border-radius:12px; background:var(--blue-700); display:flex; align-items:center; justify-content:center; margin-bottom:20px;}
+h1{font-family:var(--disp); font-size:24px; margin-bottom:10px;}
+.verified-pill{display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:600; color:var(--blue-700); background:var(--blue-200); padding:4px 10px; border-radius:14px; margin-bottom:16px;}
+.info-row{display:flex; justify-content:space-between; font-size:14px; padding:12px 0; border-top:1px solid var(--line);}
+.info-row span:first-child{color:var(--ink-soft);}
+.info-card{background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:24px; margin-top:8px;}
+#loading, #not-found{padding:80px 0; text-align:center; color:var(--ink-soft);}
+</style>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+
+<header>
+  <nav>
+    <a href="index.html" class="brand">
+      <svg viewBox="0 0 64 64" width="24" height="24" fill="none"><path d="M14 54 L14 30 A18 18 0 0 1 50 30 L50 54" stroke="#0C447C" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="brand-text">Cimbra</span>
+    </a>
+    <a href="buscar-empresas.html" class="btn btn-ghost">← Volver a la búsqueda</a>
+  </nav>
+</header>
+
+<div class="wrap" id="loading">Cargando perfil…</div>
+<div class="wrap" id="not-found" style="display:none;">Este perfil no existe o todavía no está verificado.</div>
+
+<section id="profile-content" style="display:none;">
+  <div class="wrap">
+    <div class="avatar"><svg width="30" height="30" viewBox="0 0 64 64" fill="none"><path d="M14 54 L14 30 A18 18 0 0 1 50 30 L50 54" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <span class="verified-pill">✓ Proveedor verificado</span>
+    <h1 id="p-name"></h1>
+    <div class="info-card">
+      <div class="info-row"><span>Material principal</span><span id="p-material"></span></div>
+      <div class="info-row"><span>Comunidad autónoma</span><span id="p-region"></span></div>
+      <div class="info-row"><span>CIF</span><span id="p-cif"></span></div>
+      <div class="info-row"><span>En Cimbra desde</span><span id="p-since"></span></div>
+    </div>
+    <p style="font-size:12px; color:var(--ink-soft); margin-top:16px;">Este perfil muestra únicamente los datos que la empresa ha aportado en su alta. Catálogo, certificaciones y casos de éxito se irán añadiendo a medida que la empresa complete su perfil.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap" style="max-width:1100px;">
+      <div style="font-size:11.5px; margin-bottom:14px;"><a href="mailto:info@cimbrasolutions.es" style="color:var(--blue-200);">info@cimbrasolutions.es</a></div>
+      <div>© 2026 Cimbra. Materiales de obra, sin fricción.</div>
+  </div>
+</footer>
+
+<script>
+(async function(){
+  const id = new URLSearchParams(window.location.search).get('id');
+  if(!id){
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('not-found').style.display = 'block';
+    return;
+  }
+
+  const { data, error } = await sb
+    .from('profiles')
+    .select('company_name, cif, material, region, created_at, role, status')
+    .eq('id', id)
+    .eq('role', 'fabrica')
+    .eq('status', 'verified')
+    .single();
+
+  document.getElementById('loading').style.display = 'none';
+
+  if(error || !data){
+    document.getElementById('not-found').style.display = 'block';
+    return;
+  }
+
+  document.title = data.company_name + ' | Cimbra';
+  document.getElementById('p-name').textContent = data.company_name;
+  document.getElementById('p-material').textContent = data.material || 'Sin especificar';
+  document.getElementById('p-region').textContent = data.region || 'Sin especificar';
+  document.getElementById('p-cif').textContent = data.cif || '—';
+  document.getElementById('p-since').textContent = new Date(data.created_at).toLocaleDateString('es-ES', { year:'numeric', month:'long' });
+  document.getElementById('profile-content').style.display = 'block';
+})();
+</script>
+</body>
+</html>

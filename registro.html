@@ -129,8 +129,8 @@ textarea{resize:vertical; min-height:90px;}
         <div><label>CIF</label><input type="text" id="signup-f-cif" required placeholder="A87654321"></div>
       </div>
       <div class="field-row">
-        <div><label>Material principal</label><select><option>Cemento</option><option>Arena</option><option>Grava</option><option>Hormigón</option><option>Acero corrugado</option><option>Ladrillos</option><option>Bloques de cemento</option><option>Madera</option><option>Yeso</option><option>Vidrio</option><option>Cerámica</option><option>Pintura</option></select></div>
-        <div><label>Zona de cobertura</label><select><option>Provincial</option><option>Regional</option><option>Nacional</option></select></div>
+        <div><label>Material principal</label><select id="signup-f-material"><option>Cemento</option><option>Arena</option><option>Grava</option><option>Hormigón</option><option>Acero corrugado</option><option>Ladrillos</option><option>Bloques de cemento</option><option>Madera</option><option>Yeso</option><option>Vidrio</option><option>Cerámica</option><option>Pintura</option></select></div>
+        <div><label>Comunidad autónoma principal</label><select id="signup-f-region"></select></div>
       </div>
       <label>Certificaciones de calidad (opcional, se verifican después)</label><input type="text" placeholder="Ej. ISO 9001, marcado CE">
       <label>Email de contacto</label><input type="email" id="signup-f-email" required placeholder="ventas@fabrica.com">
@@ -162,6 +162,9 @@ textarea{resize:vertical; min-height:90px;}
       <form class="card" id="form-login">
         <label>Email</label><input type="email" id="login-email" required placeholder="tu@empresa.com">
         <label>Contraseña</label><input type="password" id="login-password" required placeholder="••••••••">
+        <label style="display:flex; align-items:center; gap:8px; font-weight:400; cursor:pointer;">
+          <input type="checkbox" id="login-remember" style="width:auto; margin:0;"> Recuérdame
+        </label>
         <p class="form-error" id="login-error"></p>
         <button class="btn btn-blue" type="submit" id="login-btn" style="width:100%; justify-content:center; padding:13px;">Iniciar sesión</button>
       </form>
@@ -233,12 +236,19 @@ function goToSection(name){
 
 let pendingEmail = '';
 
-async function signUpCompany({ email, password, role, companyName, cif, btn, errorId }){
+const spanishRegions = [
+  "Andalucía","Aragón","Principado de Asturias","Illes Balears","Canarias","Cantabria",
+  "Castilla-La Mancha","Castilla y León","Cataluña","Comunidad Valenciana","Extremadura",
+  "Galicia","Comunidad de Madrid","Región de Murcia","Comunidad Foral de Navarra","País Vasco","La Rioja"
+];
+document.getElementById('signup-f-region').innerHTML = spanishRegions.map(r=>`<option>${r}</option>`).join('');
+
+async function signUpCompany({ email, password, role, companyName, cif, material, region, btn, errorId }){
   clearError(errorId);
   btn.disabled = true;
   const { error } = await sb.auth.signUp({
     email, password,
-    options: { data: { role, company_name: companyName, cif } }
+    options: { data: { role, company_name: companyName, cif, material, region } }
   });
   btn.disabled = false;
   if(error){ showError(errorId, error.message); return; }
@@ -255,6 +265,8 @@ document.getElementById('form-registro-constructora').addEventListener('submit',
     role: 'constructora',
     companyName: document.getElementById('signup-c-name').value,
     cif: document.getElementById('signup-c-cif').value,
+    material: null,
+    region: null,
     btn: document.getElementById('signup-constructora-btn'),
     errorId: 'signup-c-error'
   });
@@ -268,6 +280,8 @@ document.getElementById('form-registro-fabrica').addEventListener('submit', (e)=
     role: 'fabrica',
     companyName: document.getElementById('signup-f-name').value,
     cif: document.getElementById('signup-f-cif').value,
+    material: document.getElementById('signup-f-material').value,
+    region: document.getElementById('signup-f-region').value,
     btn: document.getElementById('signup-fabrica-btn'),
     errorId: 'signup-f-error'
   });
@@ -293,11 +307,19 @@ document.getElementById('resend-code').addEventListener('click', async (e)=>{
   showError('verify-error', 'Te hemos enviado un nuevo código.');
 });
 
+const REMEMBER_KEY = 'cimbra_remembered_email';
+const rememberedEmail = localStorage.getItem(REMEMBER_KEY);
+if(rememberedEmail){
+  document.getElementById('login-email').value = rememberedEmail;
+  document.getElementById('login-remember').checked = true;
+}
+
 document.getElementById('form-login').addEventListener('submit', async (e)=>{
   e.preventDefault();
   clearError('login-error');
   const email = document.getElementById('login-email').value;
   const password = document.getElementById('login-password').value;
+  const remember = document.getElementById('login-remember').checked;
   const btn = document.getElementById('login-btn');
   btn.disabled = true;
   const { error } = await sb.auth.signInWithPassword({ email, password });
@@ -312,6 +334,8 @@ document.getElementById('form-login').addEventListener('submit', async (e)=>{
     showError('login-error', 'Email o contraseña incorrectos.');
     return;
   }
+  if(remember){ localStorage.setItem(REMEMBER_KEY, email); }
+  else { localStorage.removeItem(REMEMBER_KEY); }
   window.location.href = 'panel.html';
 });
 </script>

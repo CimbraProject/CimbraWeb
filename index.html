@@ -149,6 +149,16 @@
 </style>
 </head>
 <body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+<script>
+sb.auth.getSession().then(({ data: { session } })=>{
+  if(session){
+    document.getElementById('nav-cta').style.display = 'none';
+    document.getElementById('nav-panel-link').style.display = 'inline-flex';
+  }
+});
+</script>
 
 <header>
   <nav>
@@ -171,7 +181,8 @@
         <option value="fr">FR</option>
         <option value="de">DE</option>
       </select>
-      <a href="registro.html" class="nav-cta" data-i18n="nav_cta">Solicitar acceso</a>
+      <a href="registro.html" class="nav-cta" id="nav-cta" data-i18n="nav_cta">Solicitar acceso</a>
+      <a href="panel.html" class="nav-cta" id="nav-panel-link" style="display:none;">Mi panel</a>
     </div>
   </nav>
 </header>
@@ -333,7 +344,7 @@
 
 <script>
 const translations = {
-  es:{ nav_como:"Cómo funciona", nav_fabricas:"Para fábricas", nav_constructoras:"Para constructoras", nav_comparador:"Comparador", nav_precios:"Precios", nav_cta:"Solicitar acceso",
+  es:{ nav_como:"Cómo funciona", nav_fabricas:"Para fábricas", nav_constructoras:"Para constructoras", nav_comparador:"Comparador", nav_precios:"Precios", nav_cta:"Solicitar Acceso/Inicia Sesión",
     hero_eyebrow:"Materiales de obra · marketplace B2B", hero_pre:"El punto de apoyo entre quien ", hero_em1:"fabrica", hero_mid:" y quien ", hero_em2:"construye", hero_end:".",
     hero_lead:"Publica lo que necesitas, compara ofertas reales de fábricas homologadas y cierra el acuerdo sin salir de la obra.",
     hero_btn1:"Soy constructora", hero_btn2:"Soy fábrica",
@@ -359,7 +370,7 @@ const translations = {
     final_thanks:"¡Gracias! Te avisaremos en cuanto Cimbra esté disponible en tu zona.", final_error:"Ha habido un problema al enviar tu email. Escríbenos a hola@cimbrasolutions.es.",
     foot_bottom:"© 2026 Cimbra. Materiales de obra, sin fricción."
   },
-  en:{ nav_como:"How it works", nav_fabricas:"For factories", nav_constructoras:"For builders", nav_comparador:"Compare", nav_precios:"Pricing", nav_cta:"Request access",
+  en:{ nav_como:"How it works", nav_fabricas:"For factories", nav_constructoras:"For builders", nav_comparador:"Compare", nav_precios:"Pricing", nav_cta:"Request Access/Log In",
     hero_eyebrow:"Construction materials · B2B marketplace", hero_pre:"The support point between those who ", hero_em1:"manufacture", hero_mid:" and those who ", hero_em2:"build", hero_end:".",
     hero_lead:"Post what you need, compare real offers from approved factories, and close the deal without leaving the site.",
     hero_btn1:"I'm a builder", hero_btn2:"I'm a factory",
@@ -385,7 +396,7 @@ const translations = {
     final_thanks:"Thanks! We'll let you know as soon as Cimbra is available in your area.", final_error:"There was a problem sending your email. Write to us at hola@cimbrasolutions.es.",
     foot_bottom:"© 2026 Cimbra. Construction materials, without friction."
   },
-  pt:{ nav_como:"Como funciona", nav_fabricas:"Para fábricas", nav_constructoras:"Para construtoras", nav_comparador:"Comparador", nav_precios:"Preços", nav_cta:"Solicitar acesso",
+  pt:{ nav_como:"Como funciona", nav_fabricas:"Para fábricas", nav_constructoras:"Para construtoras", nav_comparador:"Comparador", nav_precios:"Preços", nav_cta:"Solicitar Acesso/Iniciar Sessão",
     hero_eyebrow:"Materiais de obra · marketplace B2B", hero_pre:"O ponto de apoio entre quem ", hero_em1:"fabrica", hero_mid:" e quem ", hero_em2:"constrói", hero_end:".",
     hero_lead:"Publica o que precisas, compara ofertas reais de fábricas homologadas e fecha o acordo sem sair da obra.",
     hero_btn1:"Sou construtora", hero_btn2:"Sou fábrica",
@@ -411,7 +422,7 @@ const translations = {
     final_thanks:"Obrigado! Avisamos-te assim que a Cimbra estiver disponível na tua zona.", final_error:"Houve um problema ao enviar o teu email. Escreve-nos para hola@cimbrasolutions.es.",
     foot_bottom:"© 2026 Cimbra. Materiais de obra, sem fricção."
   },
-  fr:{ nav_como:"Comment ça marche", nav_fabricas:"Pour les usines", nav_constructoras:"Pour les constructeurs", nav_comparador:"Comparateur", nav_precios:"Tarifs", nav_cta:"Demander l'accès",
+  fr:{ nav_como:"Comment ça marche", nav_fabricas:"Pour les usines", nav_constructoras:"Pour les constructeurs", nav_comparador:"Comparateur", nav_precios:"Tarifs", nav_cta:"Demander l'accès/Se connecter",
     hero_eyebrow:"Matériaux de construction · marketplace B2B", hero_pre:"Le point d'appui entre celui qui ", hero_em1:"fabrique", hero_mid:" et celui qui ", hero_em2:"construit", hero_end:".",
     hero_lead:"Publiez votre besoin, comparez de vraies offres d'usines homologuées et concluez l'accord sans quitter le chantier.",
     hero_btn1:"Je suis constructeur", hero_btn2:"Je suis une usine",
@@ -437,7 +448,7 @@ const translations = {
     final_thanks:"Merci ! Nous vous préviendrons dès que Cimbra sera disponible dans votre région.", final_error:"Un problème est survenu lors de l'envoi. Écrivez-nous à hola@cimbrasolutions.es.",
     foot_bottom:"© 2026 Cimbra. Matériaux de construction, sans friction."
   },
-  de:{ nav_como:"So funktioniert's", nav_fabricas:"Für Hersteller", nav_constructoras:"Für Bauunternehmen", nav_comparador:"Vergleich", nav_precios:"Preise", nav_cta:"Zugang anfragen",
+  de:{ nav_como:"So funktioniert's", nav_fabricas:"Für Hersteller", nav_constructoras:"Für Bauunternehmen", nav_comparador:"Vergleich", nav_precios:"Preise", nav_cta:"Zugang anfragen/Anmelden",
     hero_eyebrow:"Baumaterialien · B2B-Marktplatz", hero_pre:"Die Verbindung zwischen dem, der ", hero_em1:"herstellt", hero_mid:" und dem, der ", hero_em2:"baut", hero_end:".",
     hero_lead:"Veröffentliche deinen Bedarf, vergleiche echte Angebote geprüfter Hersteller und schließe den Deal ab, ohne die Baustelle zu verlassen.",
     hero_btn1:"Ich bin Bauunternehmen", hero_btn2:"Ich bin Hersteller",
