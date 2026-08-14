@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="cimbra_isotipo_perfil_azul.png">
+<title>Panel de administración | Cimbra</title>
+<meta name="robots" content="noindex,nofollow">
+<style>
+:root{
+  --blue-900:#08243F; --blue-800:#0C3866; --blue-700:#0C447C; --blue-400:#378ADD; --blue-200:#B5D4F4;
+  --amber-600:#BA7517; --amber-400:#E0A64B;
+  --paper:#F1EFE8; --paper-dim:#E7E4D9;
+  --ink:#1D1C19; --ink-soft:#5F5E5A;
+  --line:rgba(29,28,25,0.12); --line-dark:rgba(241,239,232,0.16);
+  --radius:10px;
+  --disp:'Century Gothic','Futura','Trebuchet MS',sans-serif;
+  --body:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --mono:'SF Mono','Consolas','Menlo',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--body); background:var(--paper); color:var(--ink); line-height:1.5; -webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+.wrap{max-width:1100px;margin:0 auto;padding:0 28px;}
+a:focus-visible, button:focus-visible{outline:2px solid var(--blue-400); outline-offset:2px;}
+
+header{position:sticky; top:0; z-index:50; background:rgba(241,239,232,0.94); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);}
+nav{display:flex; align-items:center; justify-content:space-between; padding:16px 28px; max-width:1100px; margin:0 auto; gap:16px;}
+.brand{display:flex; align-items:center; gap:10px;}
+.brand-text{font-family:var(--disp); font-weight:700; font-size:18px; letter-spacing:0.08em; text-transform:uppercase;}
+.btn{display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:600; padding:9px 16px; border-radius:7px; border:1px solid transparent; cursor:pointer;}
+.btn-ghost{color:var(--blue-700);}
+.btn-green{background:#1F7A4C; color:#fff;}
+.btn-red{background:#B3261E; color:#fff;}
+.btn-line{border:1px solid var(--line); color:var(--ink);}
+
+section{padding:36px 0;}
+.page-eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:0.24em; text-transform:uppercase; color:var(--blue-700); margin-bottom:6px;}
+h1{font-family:var(--disp); font-size:26px; margin-bottom:24px;}
+h2{font-family:var(--disp); font-size:17px; margin-bottom:14px;}
+
+.stats-row{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:36px;}
+@media(max-width:720px){ .stats-row{grid-template-columns:1fr 1fr;} }
+.stat-card{background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:18px;}
+.stat-card .num{font-family:var(--disp); font-size:28px; font-weight:700; color:var(--blue-700);}
+.stat-card .label{font-size:12px; color:var(--ink-soft); margin-top:4px;}
+
+.revenue-card{background:#fff; border:1px dashed var(--line); border-radius:var(--radius); padding:20px 22px; margin-bottom:36px; color:var(--ink-soft); font-size:13.5px;}
+
+table{width:100%; border-collapse:collapse; background:#fff; border-radius:var(--radius); overflow:hidden; border:1px solid var(--line);}
+th, td{text-align:left; padding:12px 14px; font-size:13px; border-bottom:1px solid var(--line);}
+th{background:var(--paper-dim); font-size:11.5px; text-transform:uppercase; letter-spacing:0.04em; color:var(--ink-soft);}
+tr:last-child td{border-bottom:none;}
+.badge{font-size:11px; font-weight:700; padding:3px 9px; border-radius:10px;}
+.badge-pending{background:#FFF3CD; color:#8A6D1D;}
+.badge-verified{background:#E4F3E9; color:#1F7A4C;}
+.badge-rejected{background:#FBE9E7; color:#B3261E;}
+.row-actions{display:flex; gap:6px;}
+.empty-msg{padding:30px; text-align:center; color:var(--ink-soft); font-size:13.5px;}
+#admin-gate{padding:80px 0; text-align:center; color:var(--ink-soft);}
+</style>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+
+<div id="admin-gate" class="wrap">Comprobando acceso…</div>
+
+<div id="admin-content" style="display:none;">
+<header>
+  <nav>
+    <a href="index.html" class="brand">
+      <svg viewBox="0 0 64 64" width="24" height="24" fill="none"><path d="M14 54 L14 30 A18 18 0 0 1 50 30 L50 54" stroke="#0C447C" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="brand-text">Cimbra · Admin</span>
+    </a>
+    <a href="#" id="logout-link" class="btn btn-ghost">Cerrar sesión</a>
+  </nav>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="page-eyebrow">Panel de administración</div>
+    <h1>Empresas y usuarios registrados</h1>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="num" id="stat-total">—</div><div class="label">Total registradas</div></div>
+      <div class="stat-card"><div class="num" id="stat-pending">—</div><div class="label">Pendientes de revisar</div></div>
+      <div class="stat-card"><div class="num" id="stat-verified">—</div><div class="label">Verificadas</div></div>
+      <div class="stat-card"><div class="num" id="stat-rejected">—</div><div class="label">Rechazadas</div></div>
+    </div>
+
+    <h2>Ingresos</h2>
+    <div class="revenue-card">
+      Todavía no hay ningún sistema de pagos conectado a Cimbra (ni Stripe ni pasarela equivalente), así que aquí no se muestra ninguna cifra — mostrar un número sin datos reales detrás sería engañoso. En cuanto se conecte el cobro de comisiones, este apartado pasará a reflejar ingresos reales.
+    </div>
+
+    <h2>Empresas registradas</h2>
+    <div id="table-wrap">
+      <table id="profiles-table" style="display:none;">
+        <thead>
+          <tr>
+            <th>Empresa</th>
+            <th>CIF</th>
+            <th>Rol</th>
+            <th>Email</th>
+            <th>Alta</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="profiles-tbody"></tbody>
+      </table>
+      <div class="empty-msg" id="profiles-empty" style="display:none;">Todavía no se ha registrado ninguna empresa.</div>
+    </div>
+  </div>
+</section>
+</div>
+
+<script>
+const statusLabels = { pending: 'Pendiente', verified: 'Verificada', rejected: 'Rechazada' };
+
+async function loadProfiles(){
+  const { data, error } = await sb
+    .from('profiles')
+    .select('id, company_name, cif, role, email, status, created_at')
+    .order('created_at', { ascending: false });
+
+  if(error){
+    document.getElementById('table-wrap').innerHTML = '<div class="empty-msg">Error cargando los datos: ' + error.message + '</div>';
+    return;
+  }
+
+  document.getElementById('stat-total').textContent = data.length;
+  document.getElementById('stat-pending').textContent = data.filter(p=>p.status==='pending').length;
+  document.getElementById('stat-verified').textContent = data.filter(p=>p.status==='verified').length;
+  document.getElementById('stat-rejected').textContent = data.filter(p=>p.status==='rejected').length;
+
+  if(data.length === 0){
+    document.getElementById('profiles-empty').style.display = 'block';
+    return;
+  }
+
+  document.getElementById('profiles-table').style.display = 'table';
+  const tbody = document.getElementById('profiles-tbody');
+  tbody.innerHTML = data.map(p => `
+    <tr data-id="${p.id}">
+      <td>${p.company_name || '—'}</td>
+      <td>${p.cif || '—'}</td>
+      <td>${p.role}</td>
+      <td>${p.email || '—'}</td>
+      <td>${new Date(p.created_at).toLocaleDateString('es-ES')}</td>
+      <td><span class="badge badge-${p.status}">${statusLabels[p.status]}</span></td>
+      <td class="row-actions">
+        <button class="btn btn-green" data-action="verified" data-id="${p.id}">Aprobar</button>
+        <button class="btn btn-red" data-action="rejected" data-id="${p.id}">Rechazar</button>
+        <button class="btn btn-line" data-action="pending" data-id="${p.id}">Reiniciar</button>
+      </td>
+    </tr>
+  `).join('');
+
+  tbody.querySelectorAll('button[data-action]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      btn.closest('tr').style.opacity = '0.5';
+      const { error } = await sb.from('profiles').update({ status: btn.dataset.action }).eq('id', btn.dataset.id);
+      if(error){ alert('Error actualizando: ' + error.message); }
+      loadProfiles();
+    });
+  });
+}
+
+(async function(){
+  const { data: { session } } = await sb.auth.getSession();
+  if(!session){ window.location.href = 'registro.html'; return; }
+
+  const { data: profile, error } = await sb.from('profiles').select('is_admin').eq('id', session.user.id).single();
+  if(error || !profile || !profile.is_admin){
+    document.getElementById('admin-gate').textContent = 'No tienes acceso a esta página.';
+    return;
+  }
+
+  document.getElementById('admin-gate').style.display = 'none';
+  document.getElementById('admin-content').style.display = 'block';
+  loadProfiles();
+
+  document.getElementById('logout-link').addEventListener('click', async (e)=>{
+    e.preventDefault();
+    await sb.auth.signOut();
+    window.location.href = 'index.html';
+  });
+})();
+</script>
+</body>
+</html>
