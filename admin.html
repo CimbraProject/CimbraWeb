@@ -173,11 +173,7 @@ async function loadProfiles(){
 
   const { data: profile, error } = await sb.from('profiles').select('is_admin').eq('id', session.user.id).single();
   if(error || !profile || !profile.is_admin){
-    document.getElementById('admin-gate').innerHTML =
-      'No tienes acceso a esta página.<br><br>' +
-      '<span style="font-family:monospace; font-size:12px;">debug — user id: ' + session.user.id + '<br>' +
-      'query error: ' + (error ? JSON.stringify(error) : 'ninguno') + '<br>' +
-      'profile: ' + JSON.stringify(profile) + '</span>';
+    document.getElementById('admin-gate').textContent = 'No tienes acceso a esta página.';
     return;
   }
 
