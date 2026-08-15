@@ -322,7 +322,7 @@ document.getElementById('form-login').addEventListener('submit', async (e)=>{
   const remember = document.getElementById('login-remember').checked;
   const btn = document.getElementById('login-btn');
   btn.disabled = true;
-  const { error } = await sb.auth.signInWithPassword({ email, password });
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
   btn.disabled = false;
   if(error){
     if(error.message.toLowerCase().includes('confirm')){
@@ -336,7 +336,9 @@ document.getElementById('form-login').addEventListener('submit', async (e)=>{
   }
   if(remember){ localStorage.setItem(REMEMBER_KEY, email); }
   else { localStorage.removeItem(REMEMBER_KEY); }
-  window.location.href = 'panel.html';
+
+  const { data: profile } = await sb.from('profiles').select('is_admin').eq('id', data.user.id).single();
+  window.location.href = (profile && profile.is_admin) ? 'admin.html' : 'panel.html';
 });
 </script>
 </body>
