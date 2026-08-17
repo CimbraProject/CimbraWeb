@@ -189,15 +189,18 @@ function fillCompanySelect(selectEl, profiles, role){
 }
 
 async function loadProfiles(){
-  const { data, error } = await sb
+  const { data: raw, error } = await sb
     .from('profiles')
-    .select('id, company_name, cif, role, email, status, created_at')
+    .select('id, company_name, cif, role, email, status, created_at, is_admin')
     .order('created_at', { ascending: false });
 
   if(error){
     document.getElementById('table-wrap').innerHTML = '<div class="empty-msg">Error cargando los datos: ' + error.message + '</div>';
     return;
   }
+
+  // La cuenta de administración no es una empresa real, se excluye de listas y estadísticas.
+  const data = raw.filter(p => !p.is_admin);
 
   fillCompanySelect(document.getElementById('deal-constructora'), data, 'constructora');
   fillCompanySelect(document.getElementById('deal-fabrica'), data, 'fabrica');
