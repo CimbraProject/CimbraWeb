@@ -57,6 +57,20 @@ tr:last-child td{border-bottom:none;}
 .row-actions{display:flex; gap:6px;}
 .empty-msg{padding:30px; text-align:center; color:var(--ink-soft); font-size:13.5px;}
 #admin-gate{padding:80px 0; text-align:center; color:var(--ink-soft);}
+
+.deal-card{background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:20px 22px; margin-bottom:36px;}
+.deal-form{display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:12px; align-items:end;}
+@media(max-width:860px){ .deal-form{grid-template-columns:1fr 1fr;} }
+.deal-form label{display:block; font-size:11.5px; font-weight:600; color:var(--ink-soft); margin-bottom:5px;}
+.deal-form select, .deal-form input{width:100%; font-family:var(--body); font-size:13.5px; padding:9px 11px; border-radius:7px; border:1px solid var(--line); background:var(--paper); color:var(--ink);}
+.deal-result{margin-top:14px; padding:12px 14px; border-radius:7px; font-size:13px; display:none;}
+.deal-result.ok{display:block; background:#E4F3E9; color:#1F7A4C;}
+.deal-result.free{display:block; background:#EAF1FB; color:var(--blue-700);}
+.deal-result.err{display:block; background:#FBE9E7; color:#B3261E;}
+.deal-result a{font-weight:700; text-decoration:underline;}
+.badge-free{background:#EAF1FB; color:var(--blue-700);}
+.badge-invoiced{background:#FFF3CD; color:#8A6D1D;}
+.badge-paid{background:#E4F3E9; color:#1F7A4C;}
 </style>
 </head>
 <body>
@@ -89,8 +103,56 @@ tr:last-child td{border-bottom:none;}
     </div>
 
     <h2>Ingresos</h2>
-    <div class="revenue-card">
-      Todavía no hay ningún sistema de pagos conectado a Cimbra (ni Stripe ni pasarela equivalente), así que aquí no se muestra ninguna cifra — mostrar un número sin datos reales detrás sería engañoso. En cuanto se conecte el cobro de comisiones, este apartado pasará a reflejar ingresos reales.
+    <div class="stats-row" style="margin-bottom:16px;">
+      <div class="stat-card"><div class="num" id="stat-revenue">—</div><div class="label">Comisión facturada (€)</div></div>
+      <div class="stat-card"><div class="num" id="stat-deals">—</div><div class="label">Acuerdos registrados</div></div>
+      <div class="stat-card"><div class="num" id="stat-free">—</div><div class="label">Gratis (fidelidad)</div></div>
+    </div>
+
+    <div class="deal-card">
+      <h2 style="margin-bottom:16px;">Registrar acuerdo cerrado</h2>
+      <div class="deal-form">
+        <div>
+          <label>Constructora</label>
+          <select id="deal-constructora"><option value="">Selecciona…</option></select>
+        </div>
+        <div>
+          <label>Fábrica</label>
+          <select id="deal-fabrica"><option value="">Selecciona…</option></select>
+        </div>
+        <div>
+          <label>Material</label>
+          <input type="text" id="deal-material" placeholder="Hormigón">
+        </div>
+        <div>
+          <label>Importe del pedido (€)</label>
+          <input type="number" id="deal-order-value" placeholder="4000">
+        </div>
+      </div>
+      <button class="btn btn-green" id="deal-submit" style="margin-top:14px;">Registrar y generar cobro</button>
+      <div class="deal-result" id="deal-result"></div>
+      <p style="font-size:12px; color:var(--ink-soft); margin-top:14px;">
+        Comisión: 1% si la constructora es de las primeras 50 registradas, 2% el resto. Cada 6º acuerdo de una constructora es gratis (tarjeta de fidelidad). El importe del pedido de materiales se paga siempre directamente entre constructora y fábrica, fuera de Cimbra — aquí solo se cobra la comisión de éxito.
+      </p>
+    </div>
+
+    <h2>Historial de acuerdos</h2>
+    <div id="deals-table-wrap" style="margin-bottom:36px;">
+      <table id="deals-table" style="display:none;">
+        <thead>
+          <tr>
+            <th>Constructora</th>
+            <th>Fábrica</th>
+            <th>Material</th>
+            <th>Pedido (€)</th>
+            <th>Comisión</th>
+            <th>Estado</th>
+            <th>Cobro</th>
+          </tr>
+        </thead>
+        <tbody id="deals-tbody"></tbody>
+      </table>
+      <div class="empty-msg" id="deals-empty" style="display:none;">Todavía no se ha registrado ningún acuerdo cerrado.</div>
     </div>
 
     <h2>Empresas registradas</h2>
@@ -117,6 +179,14 @@ tr:last-child td{border-bottom:none;}
 
 <script>
 const statusLabels = { pending: 'Pendiente', verified: 'Verificada', rejected: 'Rechazada' };
+const dealStatusLabels = { invoiced: 'Cobro enviado', paid: 'Pagada', pending: 'Pendiente' };
+
+function fillCompanySelect(selectEl, profiles, role){
+  selectEl.innerHTML = '<option value="">Selecciona…</option>' + profiles
+    .filter(p => p.role === role && p.status === 'verified')
+    .map(p => `<option value="${p.id}">${p.company_name || p.email}</option>`)
+    .join('');
+}
 
 async function loadProfiles(){
   const { data, error } = await sb
@@ -128,6 +198,9 @@ async function loadProfiles(){
     document.getElementById('table-wrap').innerHTML = '<div class="empty-msg">Error cargando los datos: ' + error.message + '</div>';
     return;
   }
+
+  fillCompanySelect(document.getElementById('deal-constructora'), data, 'constructora');
+  fillCompanySelect(document.getElementById('deal-fabrica'), data, 'fabrica');
 
   document.getElementById('stat-total').textContent = data.length;
   document.getElementById('stat-pending').textContent = data.filter(p=>p.status==='pending').length;
@@ -167,6 +240,96 @@ async function loadProfiles(){
   });
 }
 
+async function loadDeals(){
+  const { data, error } = await sb
+    .from('deals')
+    .select('id, order_value, commission_rate, commission_amount, is_free, status, checkout_url, created_at, constructora:constructora_id(company_name), fabrica:fabrica_id(company_name), material')
+    .order('created_at', { ascending: false });
+
+  if(error){
+    document.getElementById('deals-table-wrap').innerHTML = '<div class="empty-msg">Error cargando los acuerdos: ' + error.message + '</div>';
+    return;
+  }
+
+  const paidRevenue = data.filter(d => d.status !== 'pending').reduce((sum, d) => sum + Number(d.commission_amount), 0);
+  document.getElementById('stat-revenue').textContent = paidRevenue.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  document.getElementById('stat-deals').textContent = data.length;
+  document.getElementById('stat-free').textContent = data.filter(d => d.is_free).length;
+
+  if(data.length === 0){
+    document.getElementById('deals-empty').style.display = 'block';
+    return;
+  }
+
+  document.getElementById('deals-table').style.display = 'table';
+  document.getElementById('deals-tbody').innerHTML = data.map(d => `
+    <tr>
+      <td>${d.constructora ? d.constructora.company_name : '—'}</td>
+      <td>${d.fabrica ? d.fabrica.company_name : '—'}</td>
+      <td>${d.material || '—'}</td>
+      <td>${Number(d.order_value).toLocaleString('es-ES')}</td>
+      <td>${d.is_free ? 'Gratis' : Number(d.commission_amount).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €'}</td>
+      <td><span class="badge ${d.is_free ? 'badge-free' : 'badge-' + d.status}">${d.is_free ? 'Fidelidad' : dealStatusLabels[d.status]}</span></td>
+      <td>${d.checkout_url ? `<a href="${d.checkout_url}" target="_blank" class="btn btn-line" style="padding:6px 10px;">Ver cobro</a>` : '—'}</td>
+    </tr>
+  `).join('');
+}
+
+document.getElementById('deal-submit').addEventListener('click', async ()=>{
+  const resultEl = document.getElementById('deal-result');
+  resultEl.className = 'deal-result';
+  resultEl.style.display = 'none';
+
+  const constructoraId = document.getElementById('deal-constructora').value;
+  const fabricaId = document.getElementById('deal-fabrica').value;
+  const material = document.getElementById('deal-material').value;
+  const orderValue = document.getElementById('deal-order-value').value;
+
+  if(!constructoraId || !fabricaId || !orderValue || Number(orderValue) <= 0){
+    resultEl.className = 'deal-result err';
+    resultEl.textContent = 'Selecciona constructora, fábrica e introduce un importe de pedido válido.';
+    return;
+  }
+
+  const btn = document.getElementById('deal-submit');
+  btn.disabled = true;
+  btn.textContent = 'Registrando…';
+
+  try{
+    const { data: { session } } = await sb.auth.getSession();
+    const res = await fetch('/api/record-deal', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + session.access_token },
+      body: JSON.stringify({ constructoraId, fabricaId, material, orderValue }),
+    });
+    const out = await res.json();
+
+    if(!res.ok){
+      resultEl.className = 'deal-result err';
+      resultEl.textContent = 'Error: ' + (out.error || 'desconocido');
+      return;
+    }
+
+    if(out.isFree){
+      resultEl.className = 'deal-result free';
+      resultEl.textContent = `Acuerdo #${out.dealNumber} registrado — es gratis (tarjeta de fidelidad, cada 6º acuerdo).`;
+    } else {
+      resultEl.className = 'deal-result ok';
+      resultEl.innerHTML = `Acuerdo #${out.dealNumber} registrado — comisión ${(out.commissionRate*100).toFixed(0)}% = ${out.commissionAmount.toFixed(2)} €. <a href="${out.checkoutUrl}" target="_blank">Abrir enlace de cobro</a> para enviárselo a la constructora.`;
+    }
+
+    document.getElementById('deal-material').value = '';
+    document.getElementById('deal-order-value').value = '';
+    loadDeals();
+  } catch(err){
+    resultEl.className = 'deal-result err';
+    resultEl.textContent = 'Error de red: ' + err.message;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Registrar y generar cobro';
+  }
+});
+
 (async function(){
   const { data: { session } } = await sb.auth.getSession();
   if(!session){ window.location.href = 'registro.html'; return; }
@@ -180,6 +343,7 @@ async function loadProfiles(){
   document.getElementById('admin-gate').style.display = 'none';
   document.getElementById('admin-content').style.display = 'block';
   loadProfiles();
+  loadDeals();
 
   document.getElementById('logout-link').addEventListener('click', async (e)=>{
     e.preventDefault();

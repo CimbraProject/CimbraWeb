@@ -13,6 +13,11 @@
   status = 200
 
 [[redirects]]
+  from = "/api/record-deal"
+  to = "/.netlify/functions/record-deal"
+  status = 200
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 404
