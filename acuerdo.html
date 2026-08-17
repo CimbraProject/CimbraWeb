@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="cimbra_isotipo_perfil_azul.png">
+<title>Resumen del acuerdo | Cimbra</title>
+<meta name="robots" content="noindex,nofollow">
+<style>
+:root{
+  --blue-900:#08243F; --blue-800:#0C3866; --blue-700:#0C447C; --blue-400:#378ADD; --blue-200:#B5D4F4;
+  --amber-600:#BA7517; --amber-400:#E0A64B;
+  --paper:#F1EFE8; --paper-dim:#E7E4D9;
+  --ink:#1D1C19; --ink-soft:#5F5E5A;
+  --line:rgba(29,28,25,0.12);
+  --radius:10px;
+  --disp:'Century Gothic','Futura','Trebuchet MS',sans-serif;
+  --body:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --mono:'SF Mono','Consolas','Menlo',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--body); background:var(--paper); color:var(--ink); line-height:1.5; -webkit-font-smoothing:antialiased;}
+a{color:inherit;}
+.wrap{max-width:640px;margin:0 auto;padding:48px 28px;}
+.brand{display:flex; align-items:center; gap:10px; margin-bottom:32px;}
+.brand-text{font-family:var(--disp); font-weight:700; font-size:18px; letter-spacing:0.08em; text-transform:uppercase;}
+.doc{background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:32px;}
+.doc-eyebrow{font-family:var(--mono); font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:var(--blue-700); margin-bottom:6px;}
+.doc h1{font-family:var(--disp); font-size:22px; margin-bottom:4px;}
+.doc-sub{color:var(--ink-soft); font-size:13px; margin-bottom:26px;}
+.doc-note{background:var(--paper-dim); border-radius:7px; padding:12px 14px; font-size:12px; color:var(--ink-soft); margin-bottom:26px;}
+.row{display:flex; justify-content:space-between; gap:16px; padding:11px 0; border-bottom:1px solid var(--line); font-size:14px;}
+.row:last-of-type{border-bottom:none;}
+.row .k{color:var(--ink-soft);}
+.row .v{font-weight:600; text-align:right;}
+.total-row{display:flex; justify-content:space-between; margin-top:18px; padding-top:18px; border-top:2px solid var(--ink); font-family:var(--disp); font-size:18px;}
+.free-tag{display:inline-block; background:#EAF1FB; color:var(--blue-700); font-size:11.5px; font-weight:700; padding:3px 10px; border-radius:10px; margin-left:8px;}
+.btn{display:inline-flex; align-items:center; gap:8px; font-size:13.5px; font-weight:600; padding:11px 18px; border-radius:7px; border:1px solid transparent; cursor:pointer; margin-top:24px;}
+.btn-amber{background:var(--amber-600); color:#fff;}
+#loading, #err{padding:60px 0; text-align:center; color:var(--ink-soft);}
+@media print{ .btn, .no-print{display:none;} body{background:#fff;} .doc{border:none;} }
+</style>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+
+<div class="wrap">
+  <a href="index.html" class="brand">
+    <svg viewBox="0 0 64 64" width="24" height="24" fill="none"><path d="M14 54 L14 30 A18 18 0 0 1 50 30 L50 54" stroke="#0C447C" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span class="brand-text">Cimbra</span>
+  </a>
+
+  <div id="loading">Cargando…</div>
+  <div id="err" style="display:none;">No se ha podido cargar este acuerdo, o no tienes acceso a él.</div>
+
+  <div class="doc" id="doc" style="display:none;">
+    <div class="doc-eyebrow">Resumen de acuerdo · Nº <span id="d-number"></span></div>
+    <h1>Comisión de éxito Cimbra</h1>
+    <div class="doc-sub" id="d-date"></div>
+
+    <div class="doc-note">
+      Este documento es un resumen interno del acuerdo y su comisión, no una factura fiscal. El pago de los materiales entre constructora y fábrica se realiza directamente entre ambas partes, fuera de Cimbra.
+    </div>
+
+    <div class="row"><span class="k">Constructora</span><span class="v" id="d-constructora"></span></div>
+    <div class="row"><span class="k">Fábrica</span><span class="v" id="d-fabrica"></span></div>
+    <div class="row"><span class="k">Material</span><span class="v" id="d-material"></span></div>
+    <div class="row"><span class="k">Importe del pedido</span><span class="v" id="d-order"></span></div>
+    <div class="row"><span class="k">Tasa de comisión</span><span class="v" id="d-rate"></span></div>
+    <div class="row"><span class="k">Estado del cobro</span><span class="v" id="d-status"></span></div>
+
+    <div class="total-row"><span>Comisión Cimbra</span><span id="d-amount"></span></div>
+
+    <a href="#" class="btn btn-amber no-print" id="d-checkout-link" style="display:none;" target="_blank">Ir al cobro</a>
+  </div>
+</div>
+
+<script>
+const statusLabels = { pending: 'Pendiente', invoiced: 'Cobro enviado', paid: 'Pagada' };
+
+(async function(){
+  const { data: { session } } = await sb.auth.getSession();
+  if(!session){ window.location.href = 'registro.html'; return; }
+
+  const id = new URLSearchParams(window.location.search).get('id');
+  if(!id){ document.getElementById('loading').style.display='none'; document.getElementById('err').style.display='block'; return; }
+
+  const { data: d, error } = await sb
+    .from('deals')
+    .select('deal_number, order_value, commission_rate, commission_amount, is_free, status, checkout_url, created_at, material, constructora:constructora_id(company_name), fabrica:fabrica_id(company_name)')
+    .eq('id', id)
+    .single();
+
+  document.getElementById('loading').style.display = 'none';
+  if(error || !d){ document.getElementById('err').style.display = 'block'; return; }
+
+  document.getElementById('d-number').textContent = d.deal_number;
+  document.getElementById('d-date').textContent = new Date(d.created_at).toLocaleDateString('es-ES', { day:'numeric', month:'long', year:'numeric' });
+  document.getElementById('d-constructora').textContent = d.constructora ? d.constructora.company_name : '—';
+  document.getElementById('d-fabrica').textContent = d.fabrica ? d.fabrica.company_name : '—';
+  document.getElementById('d-material').textContent = d.material || '—';
+  document.getElementById('d-order').textContent = Number(d.order_value).toLocaleString('es-ES') + ' €';
+  document.getElementById('d-rate').textContent = d.is_free ? 'Gratis (fidelidad)' : (d.commission_rate*100).toFixed(0) + '%';
+  document.getElementById('d-status').textContent = statusLabels[d.status] || d.status;
+  document.getElementById('d-amount').textContent = d.is_free
+    ? '0,00 €'
+    : Number(d.commission_amount).toLocaleString('es-ES', { minimumFractionDigits:2, maximumFractionDigits:2 }) + ' €';
+
+  if(!d.is_free && d.checkout_url && d.status !== 'paid'){
+    const link = document.getElementById('d-checkout-link');
+    link.href = d.checkout_url;
+    link.style.display = 'inline-flex';
+  }
+
+  document.getElementById('doc').style.display = 'block';
+})();
+</script>
+</body>
+</html>

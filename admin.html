@@ -273,7 +273,10 @@ async function loadDeals(){
       <td>${Number(d.order_value).toLocaleString('es-ES')}</td>
       <td>${d.is_free ? 'Gratis' : Number(d.commission_amount).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €'}</td>
       <td><span class="badge ${d.is_free ? 'badge-free' : 'badge-' + d.status}">${d.is_free ? 'Fidelidad' : dealStatusLabels[d.status]}</span></td>
-      <td>${d.checkout_url ? `<a href="${d.checkout_url}" target="_blank" class="btn btn-line" style="padding:6px 10px;">Ver cobro</a>` : '—'}</td>
+      <td>
+        <a href="acuerdo.html?id=${d.id}" target="_blank" class="btn btn-line" style="padding:6px 10px;">Ver resumen</a>
+        ${d.checkout_url ? `<a href="${d.checkout_url}" target="_blank" class="btn btn-line" style="padding:6px 10px;">Ver cobro</a>` : ''}
+      </td>
     </tr>
   `).join('');
 }

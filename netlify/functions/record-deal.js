@@ -1,4 +1,5 @@
 const SUPABASE_URL = 'https://vvhrqajhbopxcltvpwif.supabase.co';
+const ADMIN_NOTIFY_EMAIL = 'info@cimbrasolutions.es';
 
 const EARLY_BIRD_RATE = 0.01;
 const STANDARD_RATE = 0.02;
@@ -6,6 +7,38 @@ const FREE_EVERY = 6; // deal nº 6, 12, 18... es gratis (tarjeta de fidelidad)
 
 function json(statusCode, body) {
   return { statusCode, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) };
+}
+
+// No debe tumbar el registro del acuerdo si falla el envío del correo.
+async function notifyAdmin({ dealId, dealNumber, constructoraName, fabricaName, orderValue, isFree, commissionAmount, siteUrl }) {
+  if (!process.env.RESEND_API_KEY) return;
+  const summary = isFree
+    ? 'Este acuerdo es gratuito (tarjeta de fidelidad).'
+    : `Comisión: ${commissionAmount.toFixed(2)} €.`;
+  try {
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: 'Cimbra <notificaciones@cimbrasolutions.es>',
+        to: ADMIN_NOTIFY_EMAIL,
+        subject: `Nuevo acuerdo cerrado #${dealNumber} — ${constructoraName} × ${fabricaName}`,
+        html: `
+          <p>Se ha registrado un nuevo acuerdo cerrado en Cimbra.</p>
+          <p><b>Constructora:</b> ${constructoraName}<br>
+          <b>Fábrica:</b> ${fabricaName}<br>
+          <b>Importe del pedido:</b> ${orderValue.toLocaleString('es-ES')} €<br>
+          ${summary}</p>
+          <p><a href="${siteUrl}/acuerdo.html?id=${dealId}">Ver resumen completo</a></p>
+        `,
+      }),
+    });
+  } catch (err) {
+    console.error('notifyAdmin failed', err);
+  }
 }
 
 async function supabaseRequest(path, options = {}) {
@@ -65,9 +98,11 @@ exports.handler = async function (event) {
   }
 
   try {
-    // 2. Datos de la constructora (para saber si es early bird).
+    // 2. Datos de la constructora (para saber si es early bird) y de la fábrica.
     const [constructora] = await supabaseRequest(`profiles?id=eq.${constructoraId}&select=is_early_bird,company_name`);
     if (!constructora) return json(404, { error: 'constructora_not_found' });
+    const [fabrica] = await supabaseRequest(`profiles?id=eq.${fabricaId}&select=company_name`);
+    if (!fabrica) return json(404, { error: 'fabrica_not_found' });
 
     // 3. Nº de orden del acuerdo para esa constructora.
     const previousDeals = await supabaseRequest(`deals?constructora_id=eq.${constructoraId}&select=id`);
@@ -93,12 +128,17 @@ exports.handler = async function (event) {
       }),
     });
 
+    const siteUrl = `https://${event.headers.host}`;
+
     if (commissionAmount <= 0) {
+      await notifyAdmin({
+        dealId: deal.id, dealNumber, constructoraName: constructora.company_name, fabricaName: fabrica.company_name,
+        orderValue: orderValueNum, isFree: true, commissionAmount: 0, siteUrl,
+      });
       return json(200, { dealNumber, isFree: true, commissionRate: rate, commissionAmount: 0, checkoutUrl: null });
     }
 
     // 5. Crea el enlace de cobro en Stripe (Checkout, sin custodiar el pago de materiales).
-    const siteUrl = `https://${event.headers.host}`;
     const params = new URLSearchParams({
       mode: 'payment',
       'payment_method_types[0]': 'card',
@@ -126,6 +166,11 @@ exports.handler = async function (event) {
     await supabaseRequest(`deals?id=eq.${deal.id}`, {
       method: 'PATCH',
       body: JSON.stringify({ checkout_url: stripeSession.url, stripe_session_id: stripeSession.id }),
+    });
+
+    await notifyAdmin({
+      dealId: deal.id, dealNumber, constructoraName: constructora.company_name, fabricaName: fabrica.company_name,
+      orderValue: orderValueNum, isFree: false, commissionAmount, siteUrl,
     });
 
     return json(200, {
