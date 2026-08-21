@@ -155,8 +155,8 @@ tr:last-child td{border-bottom:none;}
       <div class="empty-msg" id="deals-empty" style="display:none;">Todavía no se ha registrado ningún acuerdo cerrado.</div>
     </div>
 
-    <h2>Empresas registradas</h2>
-    <div id="table-wrap">
+    <h2>Pendientes de revisión</h2>
+    <div id="table-wrap" style="margin-bottom:36px;">
       <table id="profiles-table" style="display:none;">
         <thead>
           <tr>
@@ -171,7 +171,24 @@ tr:last-child td{border-bottom:none;}
         </thead>
         <tbody id="profiles-tbody"></tbody>
       </table>
-      <div class="empty-msg" id="profiles-empty" style="display:none;">Todavía no se ha registrado ninguna empresa.</div>
+      <div class="empty-msg" id="profiles-empty" style="display:none;">No hay empresas pendientes de revisar.</div>
+    </div>
+
+    <h2>Empresas verificadas</h2>
+    <div id="verified-table-wrap">
+      <table id="verified-table" style="display:none;">
+        <thead>
+          <tr>
+            <th>Empresa</th>
+            <th>CIF</th>
+            <th>Rol</th>
+            <th>Email</th>
+            <th>Alta</th>
+          </tr>
+        </thead>
+        <tbody id="verified-tbody"></tbody>
+      </table>
+      <div class="empty-msg" id="verified-empty" style="display:none;">Todavía no hay ninguna empresa verificada.</div>
     </div>
   </div>
 </section>
@@ -196,6 +213,7 @@ async function loadProfiles(){
 
   if(error){
     document.getElementById('table-wrap').innerHTML = '<div class="empty-msg">Error cargando los datos: ' + error.message + '</div>';
+    document.getElementById('verified-table-wrap').style.display = 'none';
     return;
   }
 
@@ -210,30 +228,46 @@ async function loadProfiles(){
   document.getElementById('stat-verified').textContent = data.filter(p=>p.status==='verified').length;
   document.getElementById('stat-rejected').textContent = data.filter(p=>p.status==='rejected').length;
 
-  if(data.length === 0){
+  const needsReview = data.filter(p => p.status !== 'verified');
+  const verified = data.filter(p => p.status === 'verified');
+
+  if(needsReview.length === 0){
     document.getElementById('profiles-empty').style.display = 'block';
-    return;
+  } else {
+    document.getElementById('profiles-table').style.display = 'table';
+    document.getElementById('profiles-tbody').innerHTML = needsReview.map(p => `
+      <tr data-id="${p.id}">
+        <td>${p.company_name || '—'}</td>
+        <td>${p.cif || '—'}</td>
+        <td>${p.role}</td>
+        <td>${p.email || '—'}</td>
+        <td>${new Date(p.created_at).toLocaleDateString('es-ES')}</td>
+        <td><span class="badge badge-${p.status}">${statusLabels[p.status]}</span></td>
+        <td class="row-actions">
+          <button class="btn btn-green" data-action="verified" data-id="${p.id}">Aprobar</button>
+          <button class="btn btn-red" data-action="rejected" data-id="${p.id}">Rechazar</button>
+          <button class="btn btn-line" data-action="pending" data-id="${p.id}">Reiniciar</button>
+        </td>
+      </tr>
+    `).join('');
   }
 
-  document.getElementById('profiles-table').style.display = 'table';
-  const tbody = document.getElementById('profiles-tbody');
-  tbody.innerHTML = data.map(p => `
-    <tr data-id="${p.id}">
-      <td>${p.company_name || '—'}</td>
-      <td>${p.cif || '—'}</td>
-      <td>${p.role}</td>
-      <td>${p.email || '—'}</td>
-      <td>${new Date(p.created_at).toLocaleDateString('es-ES')}</td>
-      <td><span class="badge badge-${p.status}">${statusLabels[p.status]}</span></td>
-      <td class="row-actions">
-        <button class="btn btn-green" data-action="verified" data-id="${p.id}">Aprobar</button>
-        <button class="btn btn-red" data-action="rejected" data-id="${p.id}">Rechazar</button>
-        <button class="btn btn-line" data-action="pending" data-id="${p.id}">Reiniciar</button>
-      </td>
-    </tr>
-  `).join('');
+  if(verified.length === 0){
+    document.getElementById('verified-empty').style.display = 'block';
+  } else {
+    document.getElementById('verified-table').style.display = 'table';
+    document.getElementById('verified-tbody').innerHTML = verified.map(p => `
+      <tr>
+        <td>${p.company_name || '—'}</td>
+        <td>${p.cif || '—'}</td>
+        <td>${p.role}</td>
+        <td>${p.email || '—'}</td>
+        <td>${new Date(p.created_at).toLocaleDateString('es-ES')}</td>
+      </tr>
+    `).join('');
+  }
 
-  tbody.querySelectorAll('button[data-action]').forEach(btn=>{
+  document.querySelectorAll('#profiles-tbody button[data-action]').forEach(btn=>{
     btn.addEventListener('click', async ()=>{
       btn.closest('tr').style.opacity = '0.5';
       const { error } = await sb.from('profiles').update({ status: btn.dataset.action }).eq('id', btn.dataset.id);
