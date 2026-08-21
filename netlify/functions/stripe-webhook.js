@@ -42,6 +42,24 @@ exports.handler = async function (event) {
 
   if (stripeEvent.type === 'checkout.session.completed') {
     const session = stripeEvent.data.object;
+    const update = { status: 'paid' };
+
+    // Recupera el enlace al recibo real del cobro (lo emite Stripe, no Cimbra).
+    if (session.payment_intent && process.env.STRIPE_SECRET_KEY) {
+      try {
+        const piRes = await fetch(
+          `https://api.stripe.com/v1/payment_intents/${session.payment_intent}?expand[]=latest_charge`,
+          { headers: { Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}` } }
+        );
+        const pi = await piRes.json();
+        if (piRes.ok && pi.latest_charge && pi.latest_charge.receipt_url) {
+          update.receipt_url = pi.latest_charge.receipt_url;
+        }
+      } catch (err) {
+        console.error('fetching receipt_url failed', err);
+      }
+    }
+
     await fetch(`${SUPABASE_URL}/rest/v1/deals?stripe_session_id=eq.${session.id}`, {
       method: 'PATCH',
       headers: {
@@ -49,7 +67,7 @@ exports.handler = async function (event) {
         Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ status: 'paid' }),
+      body: JSON.stringify(update),
     });
   }
 

@@ -87,7 +87,7 @@ const statusLabels = { pending: 'Pendiente', invoiced: 'Cobro enviado', paid: 'P
 
   const { data: d, error } = await sb
     .from('deals')
-    .select('deal_number, order_value, commission_rate, commission_amount, is_free, status, checkout_url, created_at, material, constructora:constructora_id(company_name), fabrica:fabrica_id(company_name)')
+    .select('deal_number, order_value, commission_rate, commission_amount, is_free, status, checkout_url, receipt_url, created_at, material, constructora:constructora_id(company_name), fabrica:fabrica_id(company_name)')
     .eq('id', id)
     .single();
 
@@ -109,6 +109,12 @@ const statusLabels = { pending: 'Pendiente', invoiced: 'Cobro enviado', paid: 'P
   if(!d.is_free && d.checkout_url && d.status !== 'paid'){
     const link = document.getElementById('d-checkout-link');
     link.href = d.checkout_url;
+    link.textContent = 'Ir al cobro';
+    link.style.display = 'inline-flex';
+  } else if(d.receipt_url){
+    const link = document.getElementById('d-checkout-link');
+    link.href = d.receipt_url;
+    link.textContent = 'Ver recibo de pago';
     link.style.display = 'inline-flex';
   }
 

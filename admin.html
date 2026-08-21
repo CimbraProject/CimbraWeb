@@ -71,6 +71,15 @@ tr:last-child td{border-bottom:none;}
 .badge-free{background:#EAF1FB; color:var(--blue-700);}
 .badge-invoiced{background:#FFF3CD; color:#8A6D1D;}
 .badge-paid{background:#E4F3E9; color:#1F7A4C;}
+
+.deal-toggle{background:none; border:none; cursor:pointer; font-size:14px; color:var(--ink-soft); padding:2px 6px;}
+.deal-detail-row{display:none;}
+.deal-detail-row.open{display:table-row;}
+.deal-detail{background:var(--paper-dim); padding:16px 20px; display:grid; grid-template-columns:repeat(4,1fr); gap:16px; font-size:12.5px;}
+@media(max-width:860px){ .deal-detail{grid-template-columns:1fr 1fr;} }
+.deal-detail .k{color:var(--ink-soft); text-transform:uppercase; font-size:10.5px; letter-spacing:0.06em; margin-bottom:4px;}
+.deal-detail .v{font-weight:600;}
+.deal-detail a{color:var(--blue-700); text-decoration:underline;}
 </style>
 </head>
 <body>
@@ -141,13 +150,12 @@ tr:last-child td{border-bottom:none;}
       <table id="deals-table" style="display:none;">
         <thead>
           <tr>
+            <th></th>
             <th>Constructora</th>
             <th>Fábrica</th>
-            <th>Material</th>
             <th>Pedido (€)</th>
             <th>Comisión</th>
             <th>Estado</th>
-            <th>Cobro</th>
           </tr>
         </thead>
         <tbody id="deals-tbody"></tbody>
@@ -280,7 +288,7 @@ async function loadProfiles(){
 async function loadDeals(){
   const { data, error } = await sb
     .from('deals')
-    .select('id, order_value, commission_rate, commission_amount, is_free, status, checkout_url, created_at, constructora:constructora_id(company_name), fabrica:fabrica_id(company_name), material')
+    .select('id, deal_number, order_value, commission_rate, commission_amount, is_free, status, checkout_url, receipt_url, created_at, constructora:constructora_id(company_name), fabrica:fabrica_id(company_name), material')
     .order('created_at', { ascending: false });
 
   if(error){
@@ -301,18 +309,44 @@ async function loadDeals(){
   document.getElementById('deals-table').style.display = 'table';
   document.getElementById('deals-tbody').innerHTML = data.map(d => `
     <tr>
+      <td><button class="deal-toggle" data-toggle="deal-detail-${d.id}">▸</button></td>
       <td>${d.constructora ? d.constructora.company_name : '—'}</td>
       <td>${d.fabrica ? d.fabrica.company_name : '—'}</td>
-      <td>${d.material || '—'}</td>
       <td>${Number(d.order_value).toLocaleString('es-ES')}</td>
       <td>${d.is_free ? 'Gratis' : Number(d.commission_amount).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €'}</td>
       <td><span class="badge ${d.is_free ? 'badge-free' : 'badge-' + d.status}">${d.is_free ? 'Fidelidad' : dealStatusLabels[d.status]}</span></td>
-      <td>
-        <a href="acuerdo.html?id=${d.id}" target="_blank" class="btn btn-line" style="padding:6px 10px;">Ver resumen</a>
-        ${d.checkout_url ? `<a href="${d.checkout_url}" target="_blank" class="btn btn-line" style="padding:6px 10px;">Ver cobro</a>` : ''}
+    </tr>
+    <tr class="deal-detail-row" id="deal-detail-${d.id}">
+      <td colspan="6" style="padding:0;">
+        <div class="deal-detail">
+          <div>
+            <div class="k">Operación</div>
+            <div class="v">Acuerdo #${d.deal_number} · ${d.material || 'sin material especificado'} · ${new Date(d.created_at).toLocaleDateString('es-ES')}</div>
+          </div>
+          <div>
+            <div class="k">Ticket / resumen</div>
+            <div class="v"><a href="acuerdo.html?id=${d.id}" target="_blank">Ver resumen del acuerdo</a></div>
+          </div>
+          <div>
+            <div class="k">Copia de pago</div>
+            <div class="v">${d.receipt_url ? `<a href="${d.receipt_url}" target="_blank">Ver recibo de Stripe</a>` : (d.checkout_url ? `<a href="${d.checkout_url}" target="_blank">Ver enlace de cobro (aún no pagado)</a>` : '—')}</div>
+          </div>
+          <div>
+            <div class="k">Comisión</div>
+            <div class="v">${d.is_free ? 'Gratis (fidelidad)' : `${(d.commission_rate*100).toFixed(0)}% = ${Number(d.commission_amount).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`}</div>
+          </div>
+        </div>
       </td>
     </tr>
   `).join('');
+
+  document.querySelectorAll('.deal-toggle').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const row = document.getElementById(btn.dataset.toggle);
+      const open = row.classList.toggle('open');
+      btn.textContent = open ? '▾' : '▸';
+    });
+  });
 }
 
 document.getElementById('deal-submit').addEventListener('click', async ()=>{
@@ -345,7 +379,7 @@ document.getElementById('deal-submit').addEventListener('click', async ()=>{
 
     if(!res.ok){
       resultEl.className = 'deal-result err';
-      resultEl.textContent = 'Error: ' + (out.error || 'desconocido');
+      resultEl.textContent = 'Error: ' + (out.error || 'desconocido') + (out.detail ? ' — ' + JSON.stringify(out.detail) : '');
       return;
     }
 
