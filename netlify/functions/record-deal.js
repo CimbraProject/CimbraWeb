@@ -85,19 +85,18 @@ exports.handler = async function (event) {
     return json(400, { error: 'missing_fields' });
   }
 
-  // 1. Verifica que quien llama es un admin autenticado.
-  const userRes = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
-    headers: { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: `Bearer ${accessToken}` },
-  });
-  if (!userRes.ok) return json(401, { error: 'invalid_session' });
-  const caller = await userRes.json();
-
-  const [callerProfile] = await supabaseRequest(`profiles?id=eq.${caller.id}&select=is_admin`);
-  if (!callerProfile || !callerProfile.is_admin) {
-    return json(403, { error: 'not_admin' });
-  }
-
   try {
+    // 1. Verifica que quien llama es un admin autenticado.
+    const userRes = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+      headers: { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: `Bearer ${accessToken}` },
+    });
+    if (!userRes.ok) return json(401, { error: 'invalid_session', detail: await userRes.text() });
+    const caller = await userRes.json();
+
+    const [callerProfile] = await supabaseRequest(`profiles?id=eq.${caller.id}&select=is_admin`);
+    if (!callerProfile || !callerProfile.is_admin) {
+      return json(403, { error: 'not_admin' });
+    }
     // 2. Datos de la constructora (para saber si es early bird) y de la fábrica.
     const [constructora] = await supabaseRequest(`profiles?id=eq.${constructoraId}&select=is_early_bird,company_name`);
     if (!constructora) return json(404, { error: 'constructora_not_found' });
